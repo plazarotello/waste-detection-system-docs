@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waste_detection_system.models &mdash; Waste Detection System 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Waste Detection System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Waste Detection System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waste_detection_system.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waste_detection_system.models</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Waste Detection System: models</span>
+
+<span class="sd">Collection of available models in the Waste Detection System:</span>
+<span class="sd">- Faster R-CNN</span>
+<span class="sd">- FCOS</span>
+<span class="sd">- RetinaNet</span>
+<span class="sd">- SSD</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fasterrcnn_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">FasterRCNN</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fcos_resnet50_fpn</span><span class="p">,</span> <span class="n">FCOS_ResNet50_FPN_Weights</span><span class="p">,</span> <span class="n">FCOS</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">retinanet_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">RetinaNet_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">RetinaNet</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">ssd300_vgg16</span><span class="p">,</span> <span class="n">SSD300_VGG16_Weights</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span>
+
+<span class="kn">from</span> <span class="nn">torchinfo</span> <span class="kn">import</span> <span class="n">summary</span>
+
+<span class="n">AVAILABLE_MODELS</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Models&#39;</span><span class="p">,</span> <span class="s1">&#39;FASTERRCNN FCOS RETINANET SSD&#39;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;enum: available models: ``FasterRCNN``, ``FCOS``, ``RetinaNet``, ``SSD``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="load_partial_weights"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.load_partial_weights">[docs]</a><span class="k">def</span> <span class="nf">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Load the given weights in the model. If a layer is not present in the weights </span>
+<span class="sd">    and model, the weights regarding that layer won&#39;t be loaded.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model to load the weights in</span>
+<span class="sd">        weights (Any): weights to load</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[FasterRCNN, FCOS, SSD, RetinaNet]: model with the weights loaded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model_dict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">model_dict</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">model_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">()}</span>
+    <span class="n">model_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">model_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="print_stats"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.print_stats">[docs]</a><span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prints the trainable/total parameters of the model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model</span>
+<span class="sd">        transfer_learning_level (int): transfer learning level or TLL</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trainable_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+    <span class="n">total_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TLL = </span><span class="si">{</span><span class="n">transfer_learning_level</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">trainable_params</span><span class="si">}</span><span class="s1"> trainable params &#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="nb">round</span><span class="p">((</span><span class="n">trainable_params</span><span class="o">/</span><span class="n">total_params</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">%) | &#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">total_params</span><span class="si">}</span><span class="s1"> total params&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pretty_summary"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.pretty_summary">[docs]</a><span class="k">def</span> <span class="nf">pretty_summary</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Prints the summary of the model, showing 3 levels of depth and the trainable/total parameters</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">]))</span></div>
+
+<span class="c1"># TRANSFER LEARNING LEVEL:</span>
+<span class="c1"># TLL=0 : train from scratch</span>
+<span class="c1"># TLL=1 : transfer learning, train only the head</span>
+<span class="c1"># TLL&gt;1 : fine-tuning, trains the head plus the (n-1) number of layers from top to bottom</span>
+<span class="c1">#         MIN = 2, MAX = 5</span>
+
+<div class="viewcode-block" id="get_base_model"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_base_model">[docs]</a><span class="k">def</span> <span class="nf">get_base_model</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chosen_model</span> <span class="p">:</span> <span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
+                    <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs the given model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        chosen_model (AVAILABLE_MODELS): selected model</span>
+<span class="sd">        transfer_learning_level (int): transfer learning level or TLL.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[FasterRCNN, FCOS, SSD, RetinaNet]: constructed model</span>
+<span class="sd">    </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if ``chosen_model`` is not amongst the available ones</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">FASTERRCNN</span><span class="p">:</span> <span class="k">return</span> <span class="n">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
+                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">FCOS</span><span class="p">:</span> <span class="k">return</span> <span class="n">get_fcos</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
+                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">RETINANET</span><span class="p">:</span> <span class="k">return</span> <span class="n">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
+                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span> <span class="p">:</span> <span class="k">return</span> <span class="n">get_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
+                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Model not supported&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="apply_tll_to_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (FasterRCNN): model</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FasterRCNN: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TLL=0 : train from scratch</span>
+    <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL=1 : transfer learning, train only the head</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">rpn</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">roi_heads</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL&gt;1 : fine-tuning, trains the head plus the (n-1) number of layers from top to bottom</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">transfer_learning_level</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[:</span><span class="mi">7</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[</span><span class="mi">7</span><span class="p">:]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">fpn</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">rpn</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">roi_heads</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="apply_tll_to_fcos_retinanet"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_fcos_retinanet">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FCOS, RetinaNet]): model</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[FCOS, RetinaNet]: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TLL=0 : train from scratch</span>
+    <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL=1 : transfer learning, train only the head</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">anchor_generator</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">regression_head</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">classification_head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL&gt;1 : fine-tuning, trains the head plus the (n-1) number of layers from top to bottom</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">transfer_learning_level</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[:</span><span class="mi">7</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[</span><span class="mi">7</span><span class="p">:]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[:</span><span class="mi">6</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">())[</span><span class="mi">6</span><span class="p">:]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">fpn</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">anchor_generator</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="apply_tll_to_ssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_ssd">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (SSD): model</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SSD: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TLL=0 : train from scratch</span>
+    <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL=1 : transfer learning, train only the head</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">anchor_generator</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                           <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">regression_head</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">classification_head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># TLL&gt;1 : fine-tuning, trains the head plus the (n-1) number of layers from top to bottom</span>
+    <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">transfer_learning_level</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">children</span><span class="p">())[:</span><span class="mi">2</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">children</span><span class="p">())[</span><span class="mi">2</span><span class="p">:]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">children</span><span class="p">())[:</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">children</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">anchor_generator</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="get_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``FasterRCNN`` model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FasterRCNN: constructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FasterRCNN</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">fasterrcnn_resnet50_fpn_v2</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+    <span class="k">return</span> <span class="n">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="get_fcos"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_fcos">[docs]</a><span class="k">def</span> <span class="nf">get_fcos</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FCOS</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``FCOS`` model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FCOS: constructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FCOS</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">fcos_resnet50_fpn</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">FCOS_ResNet50_FPN_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="get_retinanet"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_retinanet">[docs]</a><span class="k">def</span> <span class="nf">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetinaNet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``RetinaNet`` model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RetinaNet: constructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RetinaNet</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">retinanet_resnet50_fpn_v2</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">RetinaNet_ResNet50_FPN_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="o">=</span><span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+    
+
+<div class="viewcode-block" id="get_ssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_ssd">[docs]</a><span class="k">def</span> <span class="nf">get_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
+<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                                        classification and regression heads</span>
+<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SSD: constructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SSD</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">ssd300_vgg16</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">SSD300_VGG16_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+    <span class="k">return</span> <span class="n">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span> <span class="c1"># type: ignore</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Patricia Lázaro Tello.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

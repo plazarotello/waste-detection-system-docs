@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waste_detection_system.main &mdash; Waste Detection System 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Waste Detection System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Waste Detection System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waste_detection_system.main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waste_detection_system.main</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Waste Detection System</span>
+
+<span class="sd">Collection of entry points to the module, namely the hyperparameter seach </span>
+<span class="sd">and trainer. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">codecarbon</span> <span class="kn">import</span> <span class="n">EmissionsTracker</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trainer</span>
+<span class="kn">from</span> <span class="nn">.waste_detection_module</span> <span class="kn">import</span> <span class="n">WasteDetectionModule</span>
+
+
+
+<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Obtains the configuration key-values from the specified JSON file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): name of the configuration, used for creating the </span>
+<span class="sd">                    checkpoint and results directory</span>
+<span class="sd">        config (Union[Path, str]): path to the configuration JSON file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: a dictionary with the configuration from the JSON file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">chk_dir</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">configuration</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    
+    <span class="n">epochs</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;epochs&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;epochs&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mi">100</span>
+    <span class="n">momentum</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;momentum&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;momentum&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mf">0.9</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;optimizer&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>\
+        <span class="k">else</span> <span class="s1">&#39;SGD&#39;</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;scheduler&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;scheduler&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>\
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">scheduler_steps</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;scheduler_steps&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;scheduler_steps&#39;</span> <span class="ow">in</span>\
+        <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">lr</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;lr&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mf">0.1</span>
+
+    <span class="n">weight_decay</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;weight_decay&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;weight_decay&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mf">0.001</span>
+
+    <span class="n">bs</span> <span class="o">=</span> <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;batch_size&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="n">chk_dir</span> <span class="o">/</span> <span class="n">name</span>
+    <span class="n">checkpoint_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">)</span>
+    
+    <span class="n">results_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;results_dir&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">name</span> <span class="k">if</span> <span class="s1">&#39;results_dir&#39;</span> <span class="ow">in</span> <span class="n">configuration</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>\
+        <span class="k">else</span> <span class="n">checkpoint_dir</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;epochs&#39;</span> <span class="p">:</span> <span class="n">epochs</span><span class="p">,</span> <span class="s1">&#39;momentum&#39;</span> <span class="p">:</span> <span class="n">momentum</span><span class="p">,</span>  <span class="s1">&#39;optimizer&#39;</span> <span class="p">:</span> <span class="n">optimizer</span><span class="p">,</span>
+        <span class="s1">&#39;scheduler&#39;</span> <span class="p">:</span> <span class="n">scheduler</span><span class="p">,</span> <span class="s1">&#39;scheduler_steps&#39;</span> <span class="p">:</span> <span class="n">scheduler_steps</span><span class="p">,</span>
+        <span class="s1">&#39;lr&#39;</span> <span class="p">:</span> <span class="n">lr</span><span class="p">,</span> <span class="s1">&#39;bs&#39;</span> <span class="p">:</span> <span class="n">bs</span><span class="p">,</span> <span class="s1">&#39;weight_decay&#39;</span> <span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_dir&#39;</span> <span class="p">:</span> <span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s1">&#39;results_dir&#39;</span> <span class="p">:</span> <span class="n">results_dir</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="hyperparameter_search"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.hyperparameter_search">[docs]</a><span class="k">def</span> <span class="nf">hyperparameter_search</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">find_lr</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">find_batch_size</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Searches optimal hyperparameters (namely maximum batch size an optimal </span>
+<span class="sd">    initial learning rate)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): name of the task</span>
+<span class="sd">        dataset (pd.DataFrame): training dataset to optimize for</span>
+<span class="sd">        config (Union[Path, str]): path to the configuration file</span>
+<span class="sd">        selected_model (models.AVAILABLE_MODELS): model for the task</span>
+<span class="sd">        num_classes (int): number of classes in the dataset</span>
+<span class="sd">        tll (int): Transfer Learning Level.</span>
+<span class="sd">                    TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                    TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                    classification and regression heads</span>
+<span class="sd">                    TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                    some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        metric (str): metric to monitor</span>
+<span class="sd">        find_lr (bool, optional): if the task must find an optimal initial learning rate. </span>
+<span class="sd">                                Defaults to ``True``.</span>
+<span class="sd">        find_batch_size (bool, optional): if the task must find the maximum batch size. </span>
+<span class="sd">                                Defaults to ``True``.</span>
+<span class="sd">        weights (Union[os.PathLike, str, Any, None], optional): weights to apply to the model.</span>
+<span class="sd">                                Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    
+    <span class="n">base_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">selected_model</span><span class="p">,</span> <span class="n">tll</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">base_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="n">base_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">load_partial_weights</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">base_model</span>
+
+    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;hypersearch-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
+        <span class="n">gpu_ids</span><span class="o">=</span><span class="n">gpu_ids</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> 
+        <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;results_dir&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">-emissions.csv&#39;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    
+
+    <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">monitor_metric</span> <span class="o">=</span> <span class="n">metric</span><span class="p">,</span> <span class="n">find_lr</span><span class="o">=</span><span class="n">find_lr</span><span class="p">,</span> 
+                <span class="n">find_batch_size</span><span class="o">=</span><span class="n">find_batch_size</span><span class="p">)</span>
+    <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+
+
+<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">val_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+            <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">resortit_zw</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">limit_validation</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">weights</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span>  <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Trains a selected model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        train_dataset (pd.DataFrame): dataset used for training</span>
+<span class="sd">        val_dataset (pd.DataFrame): dataset used for validation</span>
+<span class="sd">        name (str): name of the task</span>
+<span class="sd">        config (Union[Path, str]): path to the configuration JSON file</span>
+<span class="sd">        resortit_zw (int): ``0`` if ResortIT dataset, ``1`` if ZeroWaste</span>
+<span class="sd">                            Used for neptune.ai logger</span>
+<span class="sd">        metric (str): metric to optimize</span>
+<span class="sd">        selected_model (models.AVAILABLE_MODELS): model to train</span>
+<span class="sd">        num_classes (int): number of classes in the dataset</span>
+<span class="sd">        tll (int): Transfer Learning Level.</span>
+<span class="sd">                    TLL = 0 : train from scratch (all layers)</span>
+<span class="sd">                    TLL = 1 : use transfer learning and train only the </span>
+<span class="sd">                    classification and regression heads</span>
+<span class="sd">                    TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
+<span class="sd">                    some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        limit_validation (Union[bool, float], optional): if validation dataset must be limited. </span>
+<span class="sd">                                                        Accepts a percentage or a fllag, in which case </span>
+<span class="sd">                                                        validation is limited to 25%. Defaults to ``False``.</span>
+<span class="sd">        weights (Union[os.PathLike, str, Any,  None], optional): weights to initialize the model with. </span>
+<span class="sd">                                                                Defaults to ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">selected_model</span><span class="p">,</span> <span class="n">tll</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    
+    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">gpu_ids</span><span class="o">=</span><span class="n">gpu_ids</span><span class="p">,</span> 
+        <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">best_model_path</span><span class="p">,</span> <span class="n">model_trainer</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span> 
+        <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">configuration</span><span class="p">,</span> <span class="n">limit_validation</span><span class="o">=</span><span class="n">limit_validation</span><span class="p">,</span>
+        <span class="n">neptune_project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">NEPTUNE_PROJECTS</span><span class="p">[</span><span class="n">selected_model</span><span class="p">][</span><span class="n">resortit_zw</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+    <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="save_weights"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.save_weights">[docs]</a><span class="k">def</span> <span class="nf">save_weights</span><span class="p">(</span><span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">save_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Saves the weights to disk</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        weights (Any): weights to save</span>
+<span class="sd">        save_path (Union[str, Path]): file saving path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_weights_from_checkpoint"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.load_weights_from_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">load_weights_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> 
+            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Loads the selected weights in the selected model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint holding the weights or the weights directly</span>
+<span class="sd">        selected_model (models.AVAILABLE_MODELS): model in which to load the weights</span>
+<span class="sd">        num_classes (int): number of classes of the model</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: weights of the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">fake_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({})</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">selected_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+            <span class="n">train_dataset</span><span class="o">=</span><span class="n">fake_df</span><span class="p">,</span> <span class="n">val_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+            <span class="n">monitor_metric</span><span class="o">=</span><span class="s1">&#39;bbox_regression&#39;</span><span class="p">)</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+        <span class="n">module</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Patricia Lázaro Tello.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waste_detection_system.waste_detection_module &mdash; Waste Detection System 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Waste Detection System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Waste Detection System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waste_detection_system.waste_detection_module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waste_detection_system.waste_detection_module</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Waste Detection System: lightning module</span>
+
+<span class="sd">The ``LightningModule`` which holds the logic of the training loop, etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">mean</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">import</span> <span class="nn">lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span>  <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span>
+<span class="kn">from</span> <span class="nn">torchmetrics.detection.mean_ap</span> <span class="kn">import</span> <span class="n">MeanAveragePrecision</span>
+<span class="kn">from</span> <span class="nn">torchvision.ops</span> <span class="kn">import</span> <span class="n">nms</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">.waste_detection_dataset</span> <span class="kn">import</span> <span class="n">WasteDetectionDataset</span>
+<span class="kn">from</span> <span class="nn">.transformations</span> <span class="kn">import</span> <span class="n">apply_nms</span><span class="p">,</span> <span class="n">apply_score_threshold</span>
+
+
+<div class="viewcode-block" id="WasteDetectionModule"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule">[docs]</a><span class="k">class</span> <span class="nc">WasteDetectionModule</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The Lightning Module for training, validating, testing and predicting in the</span>
+<span class="sd">    Waste Detection System.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">],</span> 
+                <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">val_dataset</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                <span class="n">batch_size</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lr</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">monitor_metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                <span class="n">iou_threshold</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initializes the ``WasteDetectionModule``</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (Union[FasterRCNN, FCOS, RetinaNet, SSD]): model to use</span>
+<span class="sd">            train_dataset (DataFrame): dataset used for training</span>
+<span class="sd">            val_dataset (Union[DataFrame, None]): dataset used for validation. Can be ``None``.</span>
+<span class="sd">            batch_size (int): batch size</span>
+<span class="sd">            lr (float): initial learning rate</span>
+<span class="sd">            monitor_metric (str): metric to use in optimizers</span>
+<span class="sd">            iou_threshold (float, optional): IoU threshold. Defaults to 0.5.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="c1"># Train dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">train_dataset</span>
+
+        <span class="c1"># Validation dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_dataset</span> <span class="o">=</span> <span class="n">val_dataset</span>
+
+        <span class="c1"># Configuration dictionary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">batch_size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">batch_size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+
+        <span class="c1"># Classes (background inclusive)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span>
+
+        <span class="c1"># Metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric_to_monitor</span> <span class="o">=</span> <span class="n">monitor_metric</span>
+
+        <span class="c1"># IoU threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iou_threshold</span> <span class="o">=</span> <span class="n">iou_threshold</span>
+        <span class="c1"># Score threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="c1"># Save hyperparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;train_batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;val_batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_hyperparameters</span><span class="p">()</span>
+    
+
+
+<div class="viewcode-block" id="WasteDetectionModule.forward"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="WasteDetectionModule.on_train_epoch_start"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_epoch_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch_loss</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_train_epoch_start</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="WasteDetectionModule.training_step"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.training_step">[docs]</a>    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="c1"># Batch</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">img_path</span> <span class="o">=</span> <span class="n">batch</span>  <span class="c1"># tuple unpacking</span>
+
+        <span class="n">loss_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">loss</span> <span class="k">for</span> <span class="n">loss</span> <span class="ow">in</span> <span class="n">loss_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_dict</span><span class="p">(</span><span class="n">loss_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span></div>
+    
+<div class="viewcode-block" id="WasteDetectionModule.on_train_epoch_end"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;training_loss&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epoch_loss</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_train_epoch_end</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WasteDetectionModule.on_validation_start"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_validation_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_validation_start</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WasteDetectionModule.validation_step"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step">[docs]</a>    <span class="k">def</span> <span class="nf">validation_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="c1"># Batch</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">img_path</span> <span class="o">=</span> <span class="n">batch</span>
+
+        <span class="c1"># Inference</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">nms_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_thresholds</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preds</span><span class="o">=</span><span class="n">nms_predictions</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">nms_predictions</span></div>
+
+<div class="viewcode-block" id="WasteDetectionModule.validation_epoch_end"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
+        <span class="n">computed_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Validation_mAP&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Validation_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="WasteDetectionModule.on_test_start"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_test_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_test_start</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WasteDetectionModule.test_step"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_step">[docs]</a>    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="c1"># Batch</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">img_path</span> <span class="o">=</span> <span class="n">batch</span>
+
+        <span class="c1"># Inference</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">nms_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_thresholds</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preds</span><span class="o">=</span><span class="n">nms_predictions</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">preds</span></div>
+
+<div class="viewcode-block" id="WasteDetectionModule.test_epoch_end"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
+        <span class="n">computed_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_mAP&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WasteDetectionModule.apply_thresholds"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.apply_thresholds">[docs]</a>    <span class="k">def</span> <span class="nf">apply_thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Apply score threshold and IoU threshold to the predictions to filter the irrelevant ones</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            predictions (List[Dict]): predictions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict]: predictions filtered out from NMS and score threshold </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nms_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+            <span class="n">cpu_prediction</span><span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;boxes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">box</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">pred</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]],</span>
+                <span class="s1">&#39;scores&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">score</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">pred</span><span class="p">[</span><span class="s1">&#39;scores&#39;</span><span class="p">]],</span>
+                <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">pred</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]],</span>
+            <span class="p">}</span>
+            <span class="n">nms_predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apply_nms</span><span class="p">(</span><span class="n">target</span><span class="o">=</span>
+                    <span class="n">apply_score_threshold</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">cpu_prediction</span><span class="p">,</span> 
+                        <span class="n">score_threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">score_threshold</span><span class="p">),</span> 
+                <span class="n">iou_threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iou_threshold</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">nms_predictions</span></div>
+
+
+<div class="viewcode-block" id="WasteDetectionModule.configure_optimizers"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.configure_optimizers">[docs]</a>    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> 
+            <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">ReduceLROnPlateau</span><span class="p">(</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;max&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric_to_monitor</span> <span class="o">==</span> 
+                <span class="s1">&#39;Validation_mAP&#39;</span> <span class="k">else</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> 
+            <span class="n">patience</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_lr</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;optimizer&quot;</span><span class="p">:</span> <span class="n">optimizer</span><span class="p">,</span>
+            <span class="s2">&quot;lr_scheduler&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;scheduler&quot;</span><span class="p">:</span> <span class="n">scheduler</span><span class="p">,</span>
+                <span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric_to_monitor</span>
+            <span class="p">}</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="WasteDetectionModule.train_dataloader"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.train_dataloader">[docs]</a>    <span class="k">def</span> <span class="nf">train_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">real_batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="ow">or</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">batch_size</span>  <span class="c1"># type: ignore</span>
+        <span class="k">return</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">real_batch_size</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+    
+
+<div class="viewcode-block" id="WasteDetectionModule.val_dataloader"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.val_dataloader">[docs]</a>    <span class="k">def</span> <span class="nf">val_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_batch_size</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div></div>
+
+
+
+<div class="viewcode-block" id="collate_double"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.collate_double">[docs]</a><span class="k">def</span> <span class="nf">collate_double</span><span class="p">(</span><span class="n">batch</span> <span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Collate function</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        batch (Dict): contains ``x``, ``y`` and ``path``</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[Any, Any, Any]: ``x``, ``y``, ``path`` in that order</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+    <span class="n">img_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">img_path</span></div>
+
+
+
+<div class="viewcode-block" id="get_dataloader"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_module.get_dataloader">[docs]</a><span class="k">def</span> <span class="nf">get_dataloader</span><span class="p">(</span><span class="n">data</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">batch_size</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shuffle</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">WasteDetectionDataset</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Creates a dataloader</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): data</span>
+<span class="sd">        batch_size (int): batch size</span>
+<span class="sd">        shuffle (bool, optional): if shuffle is allowed. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataLoader[WasteDetectionDataset]: dataloader</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span> <span class="n">base</span><span class="o">.</span><span class="n">CATS_PAPEL</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">CATS_PLASTICO</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">WasteDetectionDataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_double</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    
+    <span class="k">return</span> <span class="n">dataloader</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Patricia Lázaro Tello.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
