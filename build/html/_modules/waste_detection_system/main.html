@@ -136,7 +136,7 @@
 
 
 <div class="viewcode-block" id="hyperparameter_search"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.hyperparameter_search">[docs]</a><span class="k">def</span> <span class="nf">hyperparameter_search</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-    <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">find_lr</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">find_batch_size</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">weights</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Searches optimal hyperparameters (namely maximum batch size an optimal </span>
@@ -146,7 +146,7 @@
 <span class="sd">        name (str): name of the task</span>
 <span class="sd">        dataset (pd.DataFrame): training dataset to optimize for</span>
 <span class="sd">        config (Union[Path, str]): path to the configuration file</span>
-<span class="sd">        selected_model (models.AVAILABLE_MODELS): model for the task</span>
+<span class="sd">        selected_model (base.AVAILABLE_MODELS): model for the task</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
 <span class="sd">        tll (int): Transfer Learning Level.</span>
 <span class="sd">                    TLL = 0 : train from scratch (all layers)</span>
@@ -191,7 +191,7 @@
 
 <div class="viewcode-block" id="train"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">val_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
             <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">resortit_zw</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tll</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="n">limit_validation</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="n">weights</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span>  <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Trains a selected model</span>
@@ -204,7 +204,7 @@
 <span class="sd">        resortit_zw (int): ``0`` if ResortIT dataset, ``1`` if ZeroWaste</span>
 <span class="sd">                            Used for neptune.ai logger</span>
 <span class="sd">        metric (str): metric to optimize</span>
-<span class="sd">        selected_model (models.AVAILABLE_MODELS): model to train</span>
+<span class="sd">        selected_model (base.AVAILABLE_MODELS): model to train</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
 <span class="sd">        tll (int): Transfer Learning Level.</span>
 <span class="sd">                    TLL = 0 : train from scratch (all layers)</span>
@@ -253,12 +253,12 @@
 
 
 <div class="viewcode-block" id="load_weights_from_checkpoint"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.main.load_weights_from_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">load_weights_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> 
-            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+            <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Loads the selected weights in the selected model</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint holding the weights or the weights directly</span>
-<span class="sd">        selected_model (models.AVAILABLE_MODELS): model in which to load the weights</span>
+<span class="sd">        selected_model (base.AVAILABLE_MODELS): model in which to load the weights</span>
 <span class="sd">        num_classes (int): number of classes of the model</span>
 
 <span class="sd">    Returns:</span>
@@ -271,7 +271,7 @@
         <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">selected_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
             <span class="n">train_dataset</span><span class="o">=</span><span class="n">fake_df</span><span class="p">,</span> <span class="n">val_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
-            <span class="n">monitor_metric</span><span class="o">=</span><span class="s1">&#39;bbox_regression&#39;</span><span class="p">)</span>
+            <span class="n">monitor_metric</span><span class="o">=</span><span class="s1">&#39;training_loss&#39;</span><span class="p">)</span>
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
         <span class="n">module</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">])</span>
 

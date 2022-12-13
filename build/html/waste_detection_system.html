@@ -52,21 +52,25 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-waste_detection_system.models">waste_detection_system.models module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.AVAILABLE_MODELS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_MODELS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fasterrcnn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_fcos_retinanet"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fcos_retinanet()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_ssd"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_ssd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_base_model"><code class="docutils literal notranslate"><span class="pre">get_base_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_custom_ssd"><code class="docutils literal notranslate"><span class="pre">get_custom_ssd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">get_fasterrcnn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_fcos"><code class="docutils literal notranslate"><span class="pre">get_fcos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_knnssd"><code class="docutils literal notranslate"><span class="pre">get_knnssd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_retinanet"><code class="docutils literal notranslate"><span class="pre">get_retinanet()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_ssd"><code class="docutils literal notranslate"><span class="pre">get_ssd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.get_svmssd"><code class="docutils literal notranslate"><span class="pre">get_svmssd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.load_partial_weights"><code class="docutils literal notranslate"><span class="pre">load_partial_weights()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.pretty_summary"><code class="docutils literal notranslate"><span class="pre">pretty_summary()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.models.print_stats"><code class="docutils literal notranslate"><span class="pre">print_stats()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-waste_detection_system.shared_data">waste_detection_system.shared_data module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_CLASSIFIERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.shared_data.AVAILABLE_MODELS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_MODELS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.shared_data.CANDIDATE_DATASET"><code class="docutils literal notranslate"><span class="pre">CANDIDATE_DATASET</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.shared_data.CIG_BUTTS"><code class="docutils literal notranslate"><span class="pre">CIG_BUTTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.shared_data.CIG_BUTTS_CSV"><code class="docutils literal notranslate"><span class="pre">CIG_BUTTS_CSV</span></code></a></li>
@@ -232,7 +236,7 @@ initial learning rate)</p>
 <li><p><strong>name</strong> (<em>str</em>) – name of the task</p></li>
 <li><p><strong>dataset</strong> (<em>pd.DataFrame</em>) – training dataset to optimize for</p></li>
 <li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration file</p></li>
-<li><p><strong>selected_model</strong> (<em>models.AVAILABLE_MODELS</em>) – model for the task</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model for the task</p></li>
 <li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>
 <li><p><strong>tll</strong> (<em>int</em>) – Transfer Learning Level.
 TLL = 0 : train from scratch (all layers)
@@ -260,7 +264,7 @@ Defaults to None.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the checkpoint holding the weights or the weights directly</p></li>
-<li><p><strong>selected_model</strong> (<em>models.AVAILABLE_MODELS</em>) – model in which to load the weights</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model in which to load the weights</p></li>
 <li><p><strong>num_classes</strong> (<em>int</em>) – number of classes of the model</p></li>
 </ul>
 </dd>
@@ -301,7 +305,7 @@ Defaults to None.</p></li>
 <li><p><strong>resortit_zw</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">0</span></code> if ResortIT dataset, <code class="docutils literal notranslate"><span class="pre">1</span></code> if ZeroWaste
 Used for neptune.ai logger</p></li>
 <li><p><strong>metric</strong> (<em>str</em>) – metric to optimize</p></li>
-<li><p><strong>selected_model</strong> (<em>models.AVAILABLE_MODELS</em>) – model to train</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model to train</p></li>
 <li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>
 <li><p><strong>tll</strong> (<em>int</em>) – Transfer Learning Level.
 TLL = 0 : train from scratch (all layers)
@@ -328,12 +332,6 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">None</s
 - FCOS
 - RetinaNet
 - SSD</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waste_detection_system.models.AVAILABLE_MODELS">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">AVAILABLE_MODELS</span></span><a class="headerlink" href="#waste_detection_system.models.AVAILABLE_MODELS" title="Permalink to this definition"></a></dt>
-<dd><p>enum: available models: <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">FCOS</span></code>, <code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code>, <code class="docutils literal notranslate"><span class="pre">SSD</span></code></p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.apply_tll_to_fasterrcnn">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">apply_tll_to_fasterrcnn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FasterRCNN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FasterRCNN</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#apply_tll_to_fasterrcnn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.apply_tll_to_fasterrcnn" title="Permalink to this definition"></a></dt>
@@ -439,6 +437,32 @@ some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.models.get_custom_ssd">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_custom_ssd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Classifiers</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CustomSSD</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_custom_ssd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_custom_ssd" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">SSD</span></code> model with a Machine Learning algorithm as the classifier head</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
+<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
+TLL = 0 : train from scratch (all layers)
+TLL = 1 : use transfer learning and train only the
+classification and regression heads
+TLL &gt; 1 : use fine-tuning and train the heads as well as
+some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+<li><p><strong>classifier_type</strong> (<em>AVAILABLE_CLASSIFIERS</em>) – selected ML classifier algorithm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constructed model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CustomSSD</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.get_fasterrcnn">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_fasterrcnn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FasterRCNN</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_fasterrcnn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_fasterrcnn" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code> model</p>
@@ -484,6 +508,31 @@ some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>FCOS</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.models.get_knnssd">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_knnssd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CustomSSD</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_knnssd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_knnssd" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">SSD</span></code> model with a kNN classifier head</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
+<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
+TLL = 0 : train from scratch (all layers)
+TLL = 1 : use transfer learning and train only the
+classification and regression heads
+TLL &gt; 1 : use fine-tuning and train the heads as well as
+some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constructed model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CustomSSD</p>
 </dd>
 </dl>
 </dd></dl>
@@ -539,6 +588,31 @@ some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.models.get_svmssd">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_svmssd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CustomSSD</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_svmssd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_svmssd" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">SSD</span></code> model with a SVM classifier head</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
+<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
+TLL = 0 : train from scratch (all layers)
+TLL = 1 : use transfer learning and train only the
+classification and regression heads
+TLL &gt; 1 : use fine-tuning and train the heads as well as
+some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constructed model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CustomSSD</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.load_partial_weights">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">load_partial_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FasterRCNN</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SSD</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FasterRCNN</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SSD</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#load_partial_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.load_partial_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Load the given weights in the model. If a layer is not present in the weights
@@ -588,6 +662,19 @@ and model, the weights regarding that layer won’t be loaded.</p>
 <section id="module-waste_detection_system.shared_data">
 <span id="waste-detection-system-shared-data-module"></span><h2>waste_detection_system.shared_data module<a class="headerlink" href="#module-waste_detection_system.shared_data" title="Permalink to this heading"></a></h2>
 <p>Waste Detection System: Constants</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">AVAILABLE_CLASSIFIERS</span></span><a class="headerlink" href="#waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS" title="Permalink to this definition"></a></dt>
+<dd><p>enum available classifiers: <code class="docutils literal notranslate"><span class="pre">SVM</span></code>, <code class="docutils literal notranslate"><span class="pre">KNN</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.AVAILABLE_MODELS">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">AVAILABLE_MODELS</span></span><a class="headerlink" href="#waste_detection_system.shared_data.AVAILABLE_MODELS" title="Permalink to this definition"></a></dt>
+<dd><p>enum: available models: <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">FCOS</span></code>, <code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code>, <code class="docutils literal notranslate"><span class="pre">SSD</span></code>, <code class="docutils literal notranslate"><span class="pre">SVM_SSD</span></code>,
+<code class="docutils literal notranslate"><span class="pre">KNN_SSD</span></code>, <code class="docutils literal notranslate"><span class="pre">SVM_FASTERRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">KNN_FASTERRCNN</span></code></p>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="waste_detection_system.shared_data.CANDIDATE_DATASET">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">CANDIDATE_DATASET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">WindowsPath('candidate-dataset')</span></em><a class="headerlink" href="#waste_detection_system.shared_data.CANDIDATE_DATASET" title="Permalink to this definition"></a></dt>
