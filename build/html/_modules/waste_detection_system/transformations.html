@@ -36,9 +36,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -84,25 +88,25 @@
 <span class="kn">from</span> <span class="nn">torchvision.ops</span> <span class="kn">import</span> <span class="n">nms</span>
 
 
-<div class="viewcode-block" id="normalize_01"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.normalize_01">[docs]</a><span class="k">def</span> <span class="nf">normalize_01</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="normalize_01"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.normalize_01">[docs]</a><span class="k">def</span> <span class="nf">normalize_01</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Squash image input to the value range [0, 1] (no clipping)&quot;&quot;&quot;</span>
     <span class="n">inp_out</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">inp_out</span></div>
 
 
-<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Normalize based on mean and standard deviation.&quot;&quot;&quot;</span>
     <span class="n">inp_out</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
     <span class="k">return</span> <span class="n">inp_out</span></div>
 
 
-<div class="viewcode-block" id="re_normalize"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.re_normalize">[docs]</a><span class="k">def</span> <span class="nf">re_normalize</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="re_normalize"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.re_normalize">[docs]</a><span class="k">def</span> <span class="nf">re_normalize</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Normalize the data to a certain range. Default: [0-255]&quot;&quot;&quot;</span>
     <span class="n">inp_out</span> <span class="o">=</span> <span class="n">img_as_ubyte</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">inp_out</span></div>
 
 
-<div class="viewcode-block" id="clip_bbs"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.clip_bbs">[docs]</a><span class="k">def</span> <span class="nf">clip_bbs</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+<div class="viewcode-block" id="clip_bbs"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.clip_bbs">[docs]</a><span class="k">def</span> <span class="nf">clip_bbs</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If the bounding boxes exceed one dimension, they are clipped to the dim&#39;s maximum.</span>
 <span class="sd">    Bounding boxes are expected to be in xyxy format.</span>
@@ -134,7 +138,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="map_class_to_int"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.map_class_to_int">[docs]</a><span class="k">def</span> <span class="nf">map_class_to_int</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="map_class_to_int"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.map_class_to_int">[docs]</a><span class="k">def</span> <span class="nf">map_class_to_int</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Maps a string to an integer.&quot;&quot;&quot;</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="n">dummy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
@@ -144,7 +148,7 @@
     <span class="k">return</span> <span class="n">dummy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="apply_nms"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.apply_nms">[docs]</a><span class="k">def</span> <span class="nf">apply_nms</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="apply_nms"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.apply_nms">[docs]</a><span class="k">def</span> <span class="nf">apply_nms</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Non-maximum Suppression&quot;&quot;&quot;</span>
     <span class="n">boxes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;boxes&quot;</span><span class="p">])</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">])</span>
@@ -161,7 +165,7 @@
     <span class="k">return</span> <span class="n">target</span></div>
 
 
-<div class="viewcode-block" id="apply_score_threshold"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.apply_score_threshold">[docs]</a><span class="k">def</span> <span class="nf">apply_score_threshold</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">score_threshold</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="apply_score_threshold"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.apply_score_threshold">[docs]</a><span class="k">def</span> <span class="nf">apply_score_threshold</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">score_threshold</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Removes bounding box predictions with low scores.&quot;&quot;&quot;</span>
     <span class="n">boxes</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;boxes&quot;</span><span class="p">]</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span>
@@ -175,14 +179,14 @@
     <span class="k">return</span> <span class="n">target</span></div>
 
 
-<div class="viewcode-block" id="Repr"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.Repr">[docs]</a><span class="k">class</span> <span class="nc">Repr</span><span class="p">:</span>
+<div class="viewcode-block" id="Repr"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.Repr">[docs]</a><span class="k">class</span> <span class="nc">Repr</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Evaluatable string representation of an object&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="FunctionWrapperSingle"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.FunctionWrapperSingle">[docs]</a><span class="k">class</span> <span class="nc">FunctionWrapperSingle</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
+<div class="viewcode-block" id="FunctionWrapperSingle"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.FunctionWrapperSingle">[docs]</a><span class="k">class</span> <span class="nc">FunctionWrapperSingle</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A function wrapper that returns a partial for input only.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -192,7 +196,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="FunctionWrapperDouble"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.FunctionWrapperDouble">[docs]</a><span class="k">class</span> <span class="nc">FunctionWrapperDouble</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
+<div class="viewcode-block" id="FunctionWrapperDouble"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.FunctionWrapperDouble">[docs]</a><span class="k">class</span> <span class="nc">FunctionWrapperDouble</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A function wrapper that returns a partial for an input-target pair.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -215,7 +219,7 @@
         <span class="k">return</span> <span class="n">inp</span><span class="p">,</span> <span class="n">tar</span></div>
 
 
-<div class="viewcode-block" id="Compose"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.Compose">[docs]</a><span class="k">class</span> <span class="nc">Compose</span><span class="p">:</span>
+<div class="viewcode-block" id="Compose"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.Compose">[docs]</a><span class="k">class</span> <span class="nc">Compose</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Baseclass - composes several transforms together.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]):</span>
@@ -225,7 +229,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">([</span><span class="n">transform</span> <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="ComposeDouble"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.ComposeDouble">[docs]</a><span class="k">class</span> <span class="nc">ComposeDouble</span><span class="p">(</span><span class="n">Compose</span><span class="p">):</span>
+<div class="viewcode-block" id="ComposeDouble"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.ComposeDouble">[docs]</a><span class="k">class</span> <span class="nc">ComposeDouble</span><span class="p">(</span><span class="n">Compose</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Composes transforms for input-target pairs.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
@@ -234,7 +238,7 @@
         <span class="k">return</span> <span class="n">inp</span><span class="p">,</span> <span class="n">target</span></div>
 
 
-<div class="viewcode-block" id="ComposeSingle"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.ComposeSingle">[docs]</a><span class="k">class</span> <span class="nc">ComposeSingle</span><span class="p">(</span><span class="n">Compose</span><span class="p">):</span>
+<div class="viewcode-block" id="ComposeSingle"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.ComposeSingle">[docs]</a><span class="k">class</span> <span class="nc">ComposeSingle</span><span class="p">(</span><span class="n">Compose</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Composes transforms for input only.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -243,7 +247,7 @@
         <span class="k">return</span> <span class="n">inp</span></div>
 
 
-<div class="viewcode-block" id="AlbumentationWrapper"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.AlbumentationWrapper">[docs]</a><span class="k">class</span> <span class="nc">AlbumentationWrapper</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
+<div class="viewcode-block" id="AlbumentationWrapper"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.AlbumentationWrapper">[docs]</a><span class="k">class</span> <span class="nc">AlbumentationWrapper</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper for the albumentation package.</span>
 <span class="sd">    Bounding boxes are expected to be in xyxy format (pascal_voc).</span>
@@ -274,7 +278,7 @@
         <span class="k">return</span> <span class="n">input_out</span><span class="p">,</span> <span class="n">tar</span></div>
 
 
-<div class="viewcode-block" id="Clip"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.transformations.Clip">[docs]</a><span class="k">class</span> <span class="nc">Clip</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
+<div class="viewcode-block" id="Clip"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.transformations.Clip">[docs]</a><span class="k">class</span> <span class="nc">Clip</span><span class="p">(</span><span class="n">Repr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If the bounding boxes exceed one dimension, they are clipped to the dim&#39;s maximum.</span>
 <span class="sd">    Bounding boxes are expected to be in xyxy format.</span>

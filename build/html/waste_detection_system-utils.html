@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilities &mdash; Waste Detection System 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Constants" href="waste_detection_system-constants.html" />
+    <link rel="prev" title="Training" href="waste_detection_system-training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Waste Detection System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-waste_detection_system.utils">General Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.DATASET_TYPES"><code class="docutils literal notranslate"><span class="pre">DATASET_TYPES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.batch_conversion_to_jpg"><code class="docutils literal notranslate"><span class="pre">batch_conversion_to_jpg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.clean_datasets"><code class="docutils literal notranslate"><span class="pre">clean_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.coco2pascal"><code class="docutils literal notranslate"><span class="pre">coco2pascal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.coco2yolo"><code class="docutils literal notranslate"><span class="pre">coco2yolo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.pascal2coco"><code class="docutils literal notranslate"><span class="pre">pascal2coco()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.pascal2yolo"><code class="docutils literal notranslate"><span class="pre">pascal2yolo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.plot_data_sample"><code class="docutils literal notranslate"><span class="pre">plot_data_sample()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.plot_image_with_annotations"><code class="docutils literal notranslate"><span class="pre">plot_image_with_annotations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.resize_with_pad"><code class="docutils literal notranslate"><span class="pre">resize_with_pad()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.show"><code class="docutils literal notranslate"><span class="pre">show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.yolo2coco"><code class="docutils literal notranslate"><span class="pre">yolo2coco()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.utils.yolo2pascal"><code class="docutils literal notranslate"><span class="pre">yolo2pascal()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waste_detection_system.transformations">Transformations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.AlbumentationWrapper"><code class="docutils literal notranslate"><span class="pre">AlbumentationWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.Clip"><code class="docutils literal notranslate"><span class="pre">Clip</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.Compose"><code class="docutils literal notranslate"><span class="pre">Compose</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.ComposeDouble"><code class="docutils literal notranslate"><span class="pre">ComposeDouble</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.ComposeSingle"><code class="docutils literal notranslate"><span class="pre">ComposeSingle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.FunctionWrapperDouble"><code class="docutils literal notranslate"><span class="pre">FunctionWrapperDouble</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.FunctionWrapperSingle"><code class="docutils literal notranslate"><span class="pre">FunctionWrapperSingle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.Repr"><code class="docutils literal notranslate"><span class="pre">Repr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.apply_nms"><code class="docutils literal notranslate"><span class="pre">apply_nms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.apply_score_threshold"><code class="docutils literal notranslate"><span class="pre">apply_score_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.clip_bbs"><code class="docutils literal notranslate"><span class="pre">clip_bbs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.map_class_to_int"><code class="docutils literal notranslate"><span class="pre">map_class_to_int()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.normalize_01"><code class="docutils literal notranslate"><span class="pre">normalize_01()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.transformations.re_normalize"><code class="docutils literal notranslate"><span class="pre">re_normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bounding-box-matcher">Bounding box matcher</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.bbox_iou_evaluation.bbox_iou"><code class="docutils literal notranslate"><span class="pre">bbox_iou()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.bbox_iou_evaluation.match_bboxes"><code class="docutils literal notranslate"><span class="pre">match_bboxes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-constants.html">Constants</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Waste Detection System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/waste_detection_system-utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utilities">
+<h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading"></a></h1>
+<section id="module-waste_detection_system.utils">
+<span id="general-utilities"></span><h2>General Utilities<a class="headerlink" href="#module-waste_detection_system.utils" title="Permalink to this heading"></a></h2>
+<p>Waste Detection System: Utilities</p>
+<p>Collection of general utility functions</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waste_detection_system.utils.DATASET_TYPES">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">DATASET_TYPES</span></span><a class="headerlink" href="#waste_detection_system.utils.DATASET_TYPES" title="Permalink to this definition"></a></dt>
+<dd><p>enum: type of dataset, a choice between <code class="docutils literal notranslate"><span class="pre">CANDIDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">FINAL</span></code> (ZeroWaste) and <code class="docutils literal notranslate"><span class="pre">COMPLEMENTARY</span></code> (ResortIT)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.batch_conversion_to_jpg">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">batch_conversion_to_jpg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatasetTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">DatasetTypes.CANDIDATE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#batch_conversion_to_jpg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.batch_conversion_to_jpg" title="Permalink to this definition"></a></dt>
+<dd><p>Converts an image of the dataset to JPEG images and stores it in the corresponding folder. Can be resized as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>pd.Series</em>) – row corresponding to an annotation</p></li>
+<li><p><strong>resize</strong> (<em>bool</em><em>, </em><em>optional</em>) – if the image must be resized. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>labelled</strong> (<em>bool</em><em>, </em><em>optional</em>) – if the image is labelled. Important for the resizing command. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>dataset_type</strong> (<em>DATASET_TYPES</em><em>, </em><em>optional</em>) – type of dataset. Defaults to <code class="docutils literal notranslate"><span class="pre">DATASET_TYPES.CANDIDATE</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>row with properties updated</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AttributeError</strong> – if dataset_type is not amongst the ones defined.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.clean_datasets">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">clean_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/utils.html#clean_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.clean_datasets" title="Permalink to this definition"></a></dt>
+<dd><p>Removes the different folders for storing the different types of datasets</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.coco2pascal">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">coco2pascal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#coco2pascal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.coco2pascal" title="Permalink to this definition"></a></dt>
+<dd><p>Converts from COCO to Pascal format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y</p></li>
+<li><p><strong>w</strong> (<em>int</em>) – width of the bounding box</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – height of the bounding box</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xyxy bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.coco2yolo">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">coco2yolo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#coco2yolo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.coco2yolo" title="Permalink to this definition"></a></dt>
+<dd><p>Converts from COCO to YOLO format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y</p></li>
+<li><p><strong>w</strong> (<em>int</em>) – width of the bounding box</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – height of the bounding box</p></li>
+<li><p><strong>img_w</strong> (<em>int</em>) – image width</p></li>
+<li><p><strong>img_h</strong> (<em>int</em>) – image height</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xywh bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.pascal2coco">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">pascal2coco</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#pascal2coco"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.pascal2coco" title="Permalink to this definition"></a></dt>
+<dd><p>Converts from Pascal to COCO format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>int</em>) – x1</p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – y1</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – x2</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – y2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xywh bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.pascal2yolo">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">pascal2yolo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#pascal2yolo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.pascal2yolo" title="Permalink to this definition"></a></dt>
+<dd><p>Converts from Pascal to YOLO format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>int</em>) – x1</p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – y1</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – x2</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – y2</p></li>
+<li><p><strong>img_w</strong> (<em>int</em>) – image width</p></li>
+<li><p><strong>img_h</strong> (<em>int</em>) – image height</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xywh bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.plot_data_sample">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">plot_data_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_imgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">images_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#plot_data_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.plot_data_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Plots some sample images with its corresponding annotations. Taken from <a class="reference external" href="https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html">https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_imgs</strong> (<em>pd.DataFrame</em>) – sample images (only the path property is taken into account)</p></li>
+<li><p><strong>images_df</strong> (<em>pd.DataFrame</em>) – dataset from which to extract the annotations</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.plot_image_with_annotations">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">plot_image_with_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#plot_image_with_annotations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.plot_image_with_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the given image with all its annotations. Taken from <a class="reference external" href="https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html">https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<em>Union</em><em>[</em><em>Path</em><em>,</em><em>str</em><em>]</em>) – path of the image</p></li>
+<li><p><strong>annotations</strong> (<em>pd.DataFrame</em>) – bounding boxes and labels of each annotation</p></li>
+<li><p><strong>plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – if must plot or return. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code> when plot=``True``, <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> when plot=``False``</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[torch.Tensor, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.resize_with_pad">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">resize_with_pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/utils.html#resize_with_pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.resize_with_pad" title="Permalink to this definition"></a></dt>
+<dd><p>Maintains aspect ratio and resizes with padding.
+Taken from: <a class="reference external" href="https://gist.github.com/IdeaKing/11cf5e146d23c5bb219ba3508cca89ec">https://gist.github.com/IdeaKing/11cf5e146d23c5bb219ba3508cca89ec</a></p>
+<dl class="simple">
+<dt>Params:</dt><dd><p>image (Any): Image to be resized.
+new_shape (Tuple[int, int]): Expected (width, height) of new image.
+padding_color (Tuple[int, int, int]): Tuple in BGR of padding color</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Resized image with padding</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>image (Image)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.show">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.show" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the given images side by side in a row. Taken from <a class="reference external" href="https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html">https://pytorch.org/vision/main/auto_examples/plot_repurposing_annotations.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>imgs</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>torch.Tensor</em><em>]</em>) – list of images to plot</p></li>
+<li><p><strong>figsize</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – size of the overall figure. Defaults to <code class="docutils literal notranslate"><span class="pre">(5,5)</span></code>.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – title of the overall figure. Defaults to <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.yolo2coco">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">yolo2coco</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#yolo2coco"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.yolo2coco" title="Permalink to this definition"></a></dt>
+<dd><p>Converts from YOLO to COCO format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y</p></li>
+<li><p><strong>w</strong> (<em>int</em>) – width of the bounding box</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – height of the bounding box</p></li>
+<li><p><strong>img_w</strong> (<em>int</em>) – image width</p></li>
+<li><p><strong>img_h</strong> (<em>int</em>) – image height</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xywh bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.utils.yolo2pascal">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.utils.</span></span><span class="sig-name descname"><span class="pre">yolo2pascal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/utils.html#yolo2pascal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.utils.yolo2pascal" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the bounding box from YOLO format to Pascal format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y</p></li>
+<li><p><strong>w</strong> (<em>int</em>) – width</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – height</p></li>
+<li><p><strong>img_w</strong> (<em>int</em>) – image width</p></li>
+<li><p><strong>img_h</strong> (<em>int</em>) – image height</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>xyxy bounding box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-waste_detection_system.transformations">
+<span id="transformations"></span><h2>Transformations<a class="headerlink" href="#module-waste_detection_system.transformations" title="Permalink to this heading"></a></h2>
+<p>Waste Detection System: Transformations</p>
+<p>Taken from <a class="reference external" href="https://github.com/johschmidt42/PyTorch-Object-Detection-Faster-RCNN-Tutorial">https://github.com/johschmidt42/PyTorch-Object-Detection-Faster-RCNN-Tutorial</a>
+Following the tutorial on <a class="reference external" href="https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70">https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.AlbumentationWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">AlbumentationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albumentation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pascal_voc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#AlbumentationWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.AlbumentationWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Repr" title="waste_detection_system.transformations.Repr"><code class="xref py py-class docutils literal notranslate"><span class="pre">Repr</span></code></a></p>
+<p>A wrapper for the albumentation package.
+Bounding boxes are expected to be in xyxy format (pascal_voc).
+Bounding boxes cannot be larger than the spatial image’s dimensions.
+Use Clip() if your bounding boxes are outside of the image, before using this wrapper.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.Clip">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">Clip</span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#Clip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.Clip" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Repr" title="waste_detection_system.transformations.Repr"><code class="xref py py-class docutils literal notranslate"><span class="pre">Repr</span></code></a></p>
+<p>If the bounding boxes exceed one dimension, they are clipped to the dim’s maximum.
+Bounding boxes are expected to be in xyxy format.
+Example: x_value=224 but x_shape=200 -&gt; x1=199</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.Compose">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">Compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#Compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.Compose" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Baseclass - composes several transforms together.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.ComposeDouble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">ComposeDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#ComposeDouble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.ComposeDouble" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Compose" title="waste_detection_system.transformations.Compose"><code class="xref py py-class docutils literal notranslate"><span class="pre">Compose</span></code></a></p>
+<p>Composes transforms for input-target pairs.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.ComposeSingle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">ComposeSingle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#ComposeSingle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.ComposeSingle" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Compose" title="waste_detection_system.transformations.Compose"><code class="xref py py-class docutils literal notranslate"><span class="pre">Compose</span></code></a></p>
+<p>Composes transforms for input only.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.FunctionWrapperDouble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">FunctionWrapperDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#FunctionWrapperDouble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.FunctionWrapperDouble" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Repr" title="waste_detection_system.transformations.Repr"><code class="xref py py-class docutils literal notranslate"><span class="pre">Repr</span></code></a></p>
+<p>A function wrapper that returns a partial for an input-target pair.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.FunctionWrapperSingle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">FunctionWrapperSingle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#FunctionWrapperSingle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.FunctionWrapperSingle" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#waste_detection_system.transformations.Repr" title="waste_detection_system.transformations.Repr"><code class="xref py py-class docutils literal notranslate"><span class="pre">Repr</span></code></a></p>
+<p>A function wrapper that returns a partial for input only.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.Repr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">Repr</span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#Repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.Repr" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Evaluatable string representation of an object</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.apply_nms">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">apply_nms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#apply_nms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.apply_nms" title="Permalink to this definition"></a></dt>
+<dd><p>Non-maximum Suppression</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.apply_score_threshold">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">apply_score_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_threshold</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#apply_score_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.apply_score_threshold" title="Permalink to this definition"></a></dt>
+<dd><p>Removes bounding box predictions with low scores.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.clip_bbs">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">clip_bbs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#clip_bbs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.clip_bbs" title="Permalink to this definition"></a></dt>
+<dd><p>If the bounding boxes exceed one dimension, they are clipped to the dim’s maximum.
+Bounding boxes are expected to be in xyxy format.
+Example: x_value=224 but x_shape=200 -&gt; x1=199</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.map_class_to_int">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">map_class_to_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#map_class_to_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.map_class_to_int" title="Permalink to this definition"></a></dt>
+<dd><p>Maps a string to an integer.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.normalize">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize based on mean and standard deviation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.normalize_01">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">normalize_01</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#normalize_01"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.normalize_01" title="Permalink to this definition"></a></dt>
+<dd><p>Squash image input to the value range [0, 1] (no clipping)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.transformations.re_normalize">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.transformations.</span></span><span class="sig-name descname"><span class="pre">re_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/waste_detection_system/transformations.html#re_normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.transformations.re_normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize the data to a certain range. Default: [0-255]</p>
+</dd></dl>
+
+</section>
+<section id="bounding-box-matcher">
+<h2>Bounding box matcher<a class="headerlink" href="#bounding-box-matcher" title="Permalink to this heading"></a></h2>
+<p>The bounding boxes matching based on IoU comes from <a href="#id1"><span class="problematic" id="id2">`gist`_</span></a>. This utility is used in the Hybrid Deep Learning model: <span class="xref std std-ref">feature_extractor</span>
+.. _gist: <a class="reference external" href="https://gist.githubusercontent.com/AruniRC/c629c2df0e68e23aff7dcaeef87c72d4/raw/22c6f41fba4fec31d77bfa36d38bb1f7aeabdde6/bbox_iou_evaluation.py">https://gist.githubusercontent.com/AruniRC/c629c2df0e68e23aff7dcaeef87c72d4/raw/22c6f41fba4fec31d77bfa36d38bb1f7aeabdde6/bbox_iou_evaluation.py</a></p>
+<span class="target" id="module-waste_detection_system.bbox_iou_evaluation"></span><dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.bbox_iou_evaluation.bbox_iou">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.bbox_iou_evaluation.</span></span><span class="sig-name descname"><span class="pre">bbox_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boxA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxB</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/bbox_iou_evaluation.html#bbox_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.bbox_iou_evaluation.bbox_iou" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.bbox_iou_evaluation.match_bboxes">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.bbox_iou_evaluation.</span></span><span class="sig-name descname"><span class="pre">match_bboxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox_gt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IOU_THRESH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/bbox_iou_evaluation.html#match_bboxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.bbox_iou_evaluation.match_bboxes" title="Permalink to this definition"></a></dt>
+<dd><p>Given sets of true and predicted bounding-boxes,
+determine the best possible match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox_gt</strong> (<em>N1x4 and N2x4 np array</em><em> of </em><em>bboxes</em><em> [</em><em>x1</em><em>,</em><em>y1</em><em>,</em><em>x2</em><em>,</em><em>y2</em><em>]</em><em>.</em>) – The number of bboxes, N1 and N2, need not be the same.</p></li>
+<li><p><strong>bbox_pred</strong> (<em>N1x4 and N2x4 np array</em><em> of </em><em>bboxes</em><em> [</em><em>x1</em><em>,</em><em>y1</em><em>,</em><em>x2</em><em>,</em><em>y2</em><em>]</em><em>.</em>) – The number of bboxes, N1 and N2, need not be the same.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>idxs_true, idxs_pred : indices into gt and pred for matches
+ious : corresponding IOU value of each match
+labels: vector of 0/1 values for the list of detections</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(idxs_true, idxs_pred, ious, labels)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="waste_detection_system-training.html" class="btn btn-neutral float-left" title="Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waste_detection_system-constants.html" class="btn btn-neutral float-right" title="Constants" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Patricia Lázaro Tello.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

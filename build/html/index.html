@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to Waste Detection System’s documentation! &mdash; Waste Detection System 0.1 documentation</title>
+  <title>Waste Detection System Documentation &mdash; Waste Detection System 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="waste_detection_system" href="modules.html" /> 
+    <link rel="next" title="Waste Detection System" href="waste_detection_system.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,9 +38,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">waste_detection_system</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -57,7 +61,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Welcome to Waste Detection System’s documentation!</li>
+      <li class="breadcrumb-item active">Waste Detection System Documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -67,13 +71,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-waste-detection-system-s-documentation">
-<h1>Welcome to Waste Detection System’s documentation!<a class="headerlink" href="#welcome-to-waste-detection-system-s-documentation" title="Permalink to this heading"></a></h1>
+  <section id="waste-detection-system-documentation">
+<h1>Waste Detection System Documentation<a class="headerlink" href="#waste-detection-system-documentation" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">waste_detection_system</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html">waste_detection_system package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.hyperparameter_search"><code class="docutils literal notranslate"><span class="pre">hyperparameter_search()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.load_weights_from_checkpoint"><code class="docutils literal notranslate"><span class="pre">load_weights_from_checkpoint()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.save_weights"><code class="docutils literal notranslate"><span class="pre">save_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-entry_point.html#waste_detection_system.main.train_hybrid"><code class="docutils literal notranslate"><span class="pre">train_hybrid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-models.html#module-waste_detection_system.models">Object detection models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-models.html#module-waste_detection_system.feature_extractor">Hybrid Deep Learning models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-training.html#module-waste_detection_system.trainer">The training script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-training.html#module-waste_detection_system.waste_detection_module">The lightning module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-training.html#module-waste_detection_system.waste_detection_dataset">The dataset logic</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-utils.html">Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-utils.html#module-waste_detection_system.utils">General Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-utils.html#module-waste_detection_system.transformations">Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-utils.html#bounding-box-matcher">Bounding box matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-constants.html">Constants</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_CLASSIFIERS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.AVAILABLE_MODELS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_MODELS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.GPU"><code class="docutils literal notranslate"><span class="pre">GPU</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.IMG_HEIGHT"><code class="docutils literal notranslate"><span class="pre">IMG_HEIGHT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.IMG_WIDTH"><code class="docutils literal notranslate"><span class="pre">IMG_WIDTH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.LIMIT_VAL_BATCHES"><code class="docutils literal notranslate"><span class="pre">LIMIT_VAL_BATCHES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.PATIENCE"><code class="docutils literal notranslate"><span class="pre">PATIENCE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.SEED"><code class="docutils literal notranslate"><span class="pre">SEED</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.USE_CPU"><code class="docutils literal notranslate"><span class="pre">USE_CPU</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_detection_system-constants.html#waste_detection_system.shared_data.USE_GPU"><code class="docutils literal notranslate"><span class="pre">USE_GPU</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -92,7 +131,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="waste_detection_system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="waste_detection_system.html" class="btn btn-neutral float-right" title="Waste Detection System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

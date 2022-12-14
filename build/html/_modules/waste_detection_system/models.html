@@ -36,9 +36,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -79,22 +83,20 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">import</span> <span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fasterrcnn_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">FasterRCNN</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fcos_resnet50_fpn</span><span class="p">,</span> <span class="n">FCOS_ResNet50_FPN_Weights</span><span class="p">,</span> <span class="n">FCOS</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">retinanet_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">RetinaNet_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">RetinaNet</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">ssd300_vgg16</span><span class="p">,</span> <span class="n">SSD300_VGG16_Weights</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span>
 
-<span class="kn">from</span> <span class="nn">.custom_ssd</span> <span class="kn">import</span> <span class="n">customssd300_vgg16</span><span class="p">,</span> <span class="n">CustomSSD</span>
-<span class="kn">from</span> <span class="nn">.shared_data</span> <span class="kn">import</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">,</span> <span class="n">AVAILABLE_MODELS</span>
-
 <span class="kn">from</span> <span class="nn">torchinfo</span> <span class="kn">import</span> <span class="n">summary</span>
 
+<span class="kn">from</span> <span class="nn">waste_detection_system.shared_data</span> <span class="kn">import</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">,</span> <span class="n">AVAILABLE_MODELS</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system.feature_extractor</span> <span class="kn">import</span> <span class="n">FeatureExtractor</span><span class="p">,</span> <span class="n">HybridDLModel</span>
 
-<div class="viewcode-block" id="load_partial_weights"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.load_partial_weights">[docs]</a><span class="k">def</span> <span class="nf">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="load_partial_weights"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.load_partial_weights">[docs]</a><span class="k">def</span> <span class="nf">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Load the given weights in the model. If a layer is not present in the weights </span>
 <span class="sd">    and model, the weights regarding that layer won&#39;t be loaded.</span>
 
@@ -112,7 +114,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="print_stats"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.print_stats">[docs]</a><span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="print_stats"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.print_stats">[docs]</a><span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Prints the trainable/total parameters of the model</span>
 
 <span class="sd">    Args:</span>
@@ -126,24 +128,29 @@
         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">total_params</span><span class="si">}</span><span class="s1"> total params&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pretty_summary"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.pretty_summary">[docs]</a><span class="k">def</span> <span class="nf">pretty_summary</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]):</span>
+<div class="viewcode-block" id="pretty_summary"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.pretty_summary">[docs]</a><span class="k">def</span> <span class="nf">pretty_summary</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Prints the summary of the model, showing 3 levels of depth and the trainable/total parameters</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CustomSSD</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Can&#39;t print a custom hybrid model&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">,</span> <span class="s2">&quot;input_size&quot;</span><span class="p">,</span> <span class="s2">&quot;output_size&quot;</span><span class="p">],</span> <span class="n">input_size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">],</span> <span class="n">batch_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
 
-<span class="c1"># TRANSFER LEARNING LEVEL:</span>
-<span class="c1"># TLL=0 : train from scratch</span>
-<span class="c1"># TLL=1 : transfer learning, train only the head</span>
-<span class="c1"># TLL&gt;1 : fine-tuning, trains the head plus the (n-1) number of layers from top to bottom</span>
-<span class="c1">#         MIN = 2, MAX = 5</span>
 
-<div class="viewcode-block" id="get_base_model"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_base_model">[docs]</a><span class="k">def</span> <span class="nf">get_base_model</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chosen_model</span> <span class="p">:</span> <span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
+
+
+<div class="viewcode-block" id="get_hybrid_model"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_hybrid_model">[docs]</a><span class="k">def</span> <span class="nf">get_hybrid_model</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chosen_model</span> <span class="p">:</span> <span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">chosen_classifier</span> <span class="p">:</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HybridDLModel</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">chosen_model</span><span class="o">=</span><span class="n">chosen_model</span><span class="p">,</span>
+                            <span class="n">transfer_learning_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    <span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">to_feature_extractor</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HybridDLModel</span><span class="p">(</span><span class="n">feature_extractor</span><span class="o">=</span><span class="n">feature_extractor</span><span class="p">,</span> <span class="n">classifier_type</span><span class="o">=</span><span class="n">chosen_classifier</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="get_base_model"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_base_model">[docs]</a><span class="k">def</span> <span class="nf">get_base_model</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chosen_model</span> <span class="p">:</span> <span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
                     <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Constructs the given model</span>
 
@@ -171,18 +178,35 @@
                                                                 <span class="n">transfer_learning_level</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span> <span class="p">:</span> <span class="k">return</span> <span class="n">get_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
                                                                 <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SVM_SSD</span> <span class="p">:</span> <span class="k">return</span> <span class="n">get_svmssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
-                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">KNN_SSD</span> <span class="p">:</span> <span class="k">return</span> <span class="n">get_knnssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
-                                                                <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="c1"># elif chosen_model == AVAILABLE_MODELS.SVM_FASTERRCNN : return get_svmfasterrcnn(num_classes, </span>
-    <span class="c1">#                                                             transfer_learning_level)</span>
-    <span class="c1"># elif chosen_model == AVAILABLE_MODELS.KNN_FASTERRCNN : return get_knnfasterrcnn(num_classes, </span>
-    <span class="c1">#                                                             transfer_learning_level)</span>
     <span class="k">else</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Model not supported&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="apply_tll_to_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+
+<div class="viewcode-block" id="to_feature_extractor"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.to_feature_extractor">[docs]</a><span class="k">def</span> <span class="nf">to_feature_extractor</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">FeatureExtractor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Wraps the given model in order to obtain the bounding boxes and feature maps associated</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FasterRCNN, FCOS, RetinaNet, SSD]): model to use as feature extractor</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if the wrapper is not implemented for the given model type</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FeatureExtractor: wrapper that returns a dictionary of &#39;bounding_boxes&#39; and &#39;features&#39;,</span>
+<span class="sd">        both of them being lists of tensors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SSD</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">FeatureExtractor</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;head.regression_head&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">FeatureExtractor</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;roi_heads.box_head&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Feature extractor not implemented for this model type&#39;</span><span class="p">)</span></div>
+
+
+
+
+
+
+<div class="viewcode-block" id="apply_tll_to_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
@@ -240,7 +264,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="apply_tll_to_fcos_retinanet"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_fcos_retinanet">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+<div class="viewcode-block" id="apply_tll_to_fcos_retinanet"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_fcos_retinanet">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
@@ -306,7 +330,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="apply_tll_to_ssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.apply_tll_to_ssd">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+<div class="viewcode-block" id="apply_tll_to_ssd"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_ssd">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
@@ -375,7 +399,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="get_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+<div class="viewcode-block" id="get_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``FasterRCNN`` model</span>
 
 <span class="sd">    Args:</span>
@@ -399,7 +423,7 @@
     <span class="k">return</span> <span class="n">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="get_fcos"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_fcos">[docs]</a><span class="k">def</span> <span class="nf">get_fcos</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FCOS</span><span class="p">:</span>
+<div class="viewcode-block" id="get_fcos"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_fcos">[docs]</a><span class="k">def</span> <span class="nf">get_fcos</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FCOS</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``FCOS`` model</span>
 
 <span class="sd">    Args:</span>
@@ -423,7 +447,7 @@
     <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="get_retinanet"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_retinanet">[docs]</a><span class="k">def</span> <span class="nf">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetinaNet</span><span class="p">:</span>
+<div class="viewcode-block" id="get_retinanet"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_retinanet">[docs]</a><span class="k">def</span> <span class="nf">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetinaNet</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``RetinaNet`` model</span>
 
 <span class="sd">    Args:</span>
@@ -447,7 +471,7 @@
     <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="o">=</span><span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
     
 
-<div class="viewcode-block" id="get_ssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_ssd">[docs]</a><span class="k">def</span> <span class="nf">get_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+<div class="viewcode-block" id="get_ssd"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_ssd">[docs]</a><span class="k">def</span> <span class="nf">get_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model</span>
 
 <span class="sd">    Args:</span>
@@ -465,69 +489,6 @@
     <span class="n">SSD</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">ssd300_vgg16</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-            <span class="n">weights</span><span class="o">=</span><span class="n">SSD300_VGG16_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span> <span class="c1"># type: ignore</span></div>
-
-
-<div class="viewcode-block" id="get_svmssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_svmssd">[docs]</a><span class="k">def</span> <span class="nf">get_svmssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomSSD</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model with a SVM classifier head</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        CustomSSD: constructed model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">get_custom_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">,</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="o">.</span><span class="n">SVM</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="get_knnssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_knnssd">[docs]</a><span class="k">def</span> <span class="nf">get_knnssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomSSD</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model with a kNN classifier head</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        CustomSSD: constructed model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">get_custom_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">,</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="o">.</span><span class="n">KNN</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_custom_ssd"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.models.get_custom_ssd">[docs]</a><span class="k">def</span> <span class="nf">get_custom_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
-                <span class="n">classifier_type</span> <span class="p">:</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomSSD</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model with a Machine Learning algorithm as the classifier head</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
-<span class="sd">        classifier_type (AVAILABLE_CLASSIFIERS): selected ML classifier algorithm</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        CustomSSD: constructed model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">CustomSSD</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="n">customssd300_vgg16</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">classifier_type</span><span class="p">),</span>
             <span class="n">weights</span><span class="o">=</span><span class="n">SSD300_VGG16_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>

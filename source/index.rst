@@ -3,14 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Waste Detection System's documentation!
+Waste Detection System Documentation
 ==================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-   modules
+   Waste Detection System <waste_detection_system>
+   Entry point of the module <waste_detection_system-entry_point>
+   Available models <waste_detection_system-models>
+   Training scripts <waste_detection_system-training>
+   Utilities <waste_detection_system-utils>
+   Constants <waste_detection_system-constants>
+
 
 
 Indices and tables

@@ -36,9 +36,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -83,25 +87,27 @@
     <span class="n">ModelCheckpoint</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">lightning.pytorch.loggers</span> <span class="kn">import</span> <span class="n">NeptuneLogger</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span>  <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span>
 
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="kn">import</span> <span class="nn">importlib_metadata</span>
 <span class="kn">from</span> <span class="nn">neptune.new.types</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">waste_detection_module</span>
-<span class="kn">from</span> <span class="nn">.waste_detection_module</span> <span class="kn">import</span> <span class="n">WasteDetectionModule</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">waste_detection_module</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system.waste_detection_module</span> <span class="kn">import</span> <span class="n">WasteDetectionModule</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system.feature_extractor</span> <span class="kn">import</span> <span class="n">HybridDLModel</span>
 
 
 
-<div class="viewcode-block" id="split_dataset"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.split_dataset">[docs]</a><span class="k">def</span> <span class="nf">split_dataset</span><span class="p">(</span><span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>
+<div class="viewcode-block" id="split_dataset"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.split_dataset">[docs]</a><span class="k">def</span> <span class="nf">split_dataset</span><span class="p">(</span><span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Splits a dataset in train (85%) and validation (15%)</span>
 
 <span class="sd">    Args:</span>
@@ -118,7 +124,7 @@
 
 
 
-<div class="viewcode-block" id="tune"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.tune">[docs]</a><span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">],</span> <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> 
+<div class="viewcode-block" id="tune"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.tune">[docs]</a><span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">],</span> <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> 
         <span class="n">monitor_metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">find_lr</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">find_batch_size</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Searches in the hyperparameter space for an optimal initial learning rate and maximum</span>
 <span class="sd">    batch size</span>
@@ -170,7 +176,64 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Largest batch_size allowed: </span><span class="si">{</span><span class="n">batch_scaler</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">],</span> <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> 
+
+
+<div class="viewcode-block" id="train_hybrid"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.train_hybrid">[docs]</a><span class="k">def</span> <span class="nf">train_hybrid</span><span class="p">(</span><span class="n">model</span> <span class="p">:</span> <span class="n">HybridDLModel</span><span class="p">,</span> <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">val_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> 
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HybridDLModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Trains the model with the given configuration.</span>
+<span class="sd">    The training includes model checkpointing for the last epoch and best model regarding the</span>
+<span class="sd">    given metric.</span>
+<span class="sd">    The configuration dictionary must hold the ``epochs`` key (max epochs to train), </span>
+<span class="sd">    ``lr`` key (learning rate), ``bs`` (batch size to use).</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (Union[FasterRCNN, FCOS, RetinaNet, SSD]): model to train</span>
+<span class="sd">        train_dataset (DataFrame): training dataset</span>
+<span class="sd">        val_dataset (DataFrame): validation dataset</span>
+<span class="sd">        config (dict): configuration dictionary</span>
+<span class="sd">        neptune_project (str): name of the project in which to log</span>
+<span class="sd">        metric (str): name of the metric to monitor. Usual values: ``Validation_mAP``, </span>
+<span class="sd">                    ``training_loss``, ``bbox_regression`` and ``classification``</span>
+<span class="sd">        limit_validation (Union[bool, float], optional): if validation dataset must be limited (``True`` = 25%). Defaults to ``False``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[Union[Path, str], Trainer]: best model path and the trainer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seed_everything</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">SEED</span><span class="p">)</span>
+
+    <span class="n">train_loader</span> <span class="o">=</span> <span class="n">waste_detection_module</span><span class="o">.</span><span class="n">get_dataloader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">val_loader</span> <span class="o">=</span> <span class="n">waste_detection_module</span><span class="o">.</span><span class="n">get_dataloader</span><span class="p">(</span><span class="n">val_dataset</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">train_images</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">train_targets</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+        <span class="n">train_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">train_targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">)</span>
+    
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">classification_loss</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="o">=</span><span class="n">train_images</span><span class="p">,</span> 
+        <span class="n">targets</span><span class="o">=</span><span class="n">train_targets</span><span class="p">)[</span><span class="s1">&#39;classification_loss&#39;</span><span class="p">]</span> <span class="c1"># type: ignore</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Train classification loss: </span><span class="si">{</span><span class="n">classification_loss</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">val_images</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val_targets</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">val_loader</span><span class="p">:</span>
+        <span class="n">val_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">val_targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">val_results</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="o">=</span><span class="n">val_images</span><span class="p">)</span> <span class="c1"># type: ignore</span>
+    <span class="n">val_loss</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">val_results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">val_targets</span><span class="p">)[</span><span class="s1">&#39;classification_loss&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Validation classification loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">,</span> <span class="n">SSD</span><span class="p">],</span> <span class="n">train_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> 
         <span class="n">val_dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">config</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">neptune_project</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metric</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
         <span class="n">limit_validation</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Trainer</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Trains the model with the given configuration.</span>
@@ -206,7 +269,8 @@
 
     <span class="n">neptune_logger</span> <span class="o">=</span> <span class="n">NeptuneLogger</span><span class="p">(</span>
         <span class="n">api_key</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">NEPTUNE_API_KEY</span><span class="p">,</span>
-        <span class="n">project</span><span class="o">=</span><span class="n">neptune_project</span>
+        <span class="n">project</span><span class="o">=</span><span class="n">neptune_project</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;offline&#39;</span>
     <span class="p">)</span>
 
     <span class="n">lit_model</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span>
@@ -288,7 +352,7 @@
     <span class="k">return</span> <span class="n">best_model_path</span><span class="p">,</span> <span class="n">trainer</span></div>
 
 
-<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">trainer</span> <span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">trainer</span> <span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Tests the dataset in the given trainer</span>
 
 <span class="sd">    Args:</span>
@@ -307,7 +371,7 @@
     <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">ckpt_path</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="log_packages_neptune"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.log_packages_neptune">[docs]</a><span class="k">def</span> <span class="nf">log_packages_neptune</span><span class="p">(</span><span class="n">neptune_logger</span> <span class="p">:</span> <span class="n">NeptuneLogger</span><span class="p">):</span>
+<div class="viewcode-block" id="log_packages_neptune"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.log_packages_neptune">[docs]</a><span class="k">def</span> <span class="nf">log_packages_neptune</span><span class="p">(</span><span class="n">neptune_logger</span> <span class="p">:</span> <span class="n">NeptuneLogger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Flushes the logs of the run</span>
 
 <span class="sd">    Args:</span>
@@ -325,7 +389,7 @@
     <span class="n">neptune_logger</span><span class="o">.</span><span class="n">experiment</span><span class="p">[</span><span class="s1">&#39;packages&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">File</span><span class="o">.</span><span class="n">as_html</span><span class="p">(</span><span class="n">packages_df</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="save_best_model"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.trainer.save_best_model">[docs]</a><span class="k">def</span> <span class="nf">save_best_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">save_directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
+<div class="viewcode-block" id="save_best_model"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.save_best_model">[docs]</a><span class="k">def</span> <span class="nf">save_best_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">save_directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Copies the best model to the save directory</span>
 
 <span class="sd">    Args:</span>

@@ -19,9 +19,7 @@
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="waste_detection_system package" href="waste_detection_system.html" />
-    <link rel="prev" title="Welcome to Waste Detection System’s documentation!" href="index.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,12 +37,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">waste_detection_system</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html">waste_detection_system package</a></li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -75,146 +74,7 @@
 <h1>waste_detection_system<a class="headerlink" href="#waste-detection-system" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">waste_detection_system package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.main">waste_detection_system.main module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.main.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.main.hyperparameter_search"><code class="docutils literal notranslate"><span class="pre">hyperparameter_search()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.main.load_weights_from_checkpoint"><code class="docutils literal notranslate"><span class="pre">load_weights_from_checkpoint()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.main.save_weights"><code class="docutils literal notranslate"><span class="pre">save_weights()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.main.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.models">waste_detection_system.models module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.apply_tll_to_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fasterrcnn()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.apply_tll_to_fcos_retinanet"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fcos_retinanet()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.apply_tll_to_ssd"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_ssd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_base_model"><code class="docutils literal notranslate"><span class="pre">get_base_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_custom_ssd"><code class="docutils literal notranslate"><span class="pre">get_custom_ssd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">get_fasterrcnn()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_fcos"><code class="docutils literal notranslate"><span class="pre">get_fcos()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_knnssd"><code class="docutils literal notranslate"><span class="pre">get_knnssd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_retinanet"><code class="docutils literal notranslate"><span class="pre">get_retinanet()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_ssd"><code class="docutils literal notranslate"><span class="pre">get_ssd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.get_svmssd"><code class="docutils literal notranslate"><span class="pre">get_svmssd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.load_partial_weights"><code class="docutils literal notranslate"><span class="pre">load_partial_weights()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.pretty_summary"><code class="docutils literal notranslate"><span class="pre">pretty_summary()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.models.print_stats"><code class="docutils literal notranslate"><span class="pre">print_stats()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.shared_data">waste_detection_system.shared_data module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_CLASSIFIERS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.AVAILABLE_MODELS"><code class="docutils literal notranslate"><span class="pre">AVAILABLE_MODELS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.CANDIDATE_DATASET"><code class="docutils literal notranslate"><span class="pre">CANDIDATE_DATASET</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.CIG_BUTTS"><code class="docutils literal notranslate"><span class="pre">CIG_BUTTS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.CIG_BUTTS_CSV"><code class="docutils literal notranslate"><span class="pre">CIG_BUTTS_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.COMPOSTNET"><code class="docutils literal notranslate"><span class="pre">COMPOSTNET</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.COMPOSTNET_CSV"><code class="docutils literal notranslate"><span class="pre">COMPOSTNET_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.COMP_DATASET"><code class="docutils literal notranslate"><span class="pre">COMP_DATASET</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.COMP_DATA_CSV"><code class="docutils literal notranslate"><span class="pre">COMP_DATA_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">CONFIG_DIR</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.DRINKING_WASTE"><code class="docutils literal notranslate"><span class="pre">DRINKING_WASTE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.DRINKING_WASTE_CSV"><code class="docutils literal notranslate"><span class="pre">DRINKING_WASTE_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.FINAL_DATASET"><code class="docutils literal notranslate"><span class="pre">FINAL_DATASET</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.FINAL_DATA_CSV"><code class="docutils literal notranslate"><span class="pre">FINAL_DATA_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.GPU"><code class="docutils literal notranslate"><span class="pre">GPU</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.IMG_HEIGHT"><code class="docutils literal notranslate"><span class="pre">IMG_HEIGHT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.IMG_WIDTH"><code class="docutils literal notranslate"><span class="pre">IMG_WIDTH</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.LIMIT_VAL_BATCHES"><code class="docutils literal notranslate"><span class="pre">LIMIT_VAL_BATCHES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.MODELS_DIR"><code class="docutils literal notranslate"><span class="pre">MODELS_DIR</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.NEPTUNE_PROJECTS"><code class="docutils literal notranslate"><span class="pre">NEPTUNE_PROJECTS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.PATIENCE"><code class="docutils literal notranslate"><span class="pre">PATIENCE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.PSEUDOLABELLING_DIR"><code class="docutils literal notranslate"><span class="pre">PSEUDOLABELLING_DIR</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.RAW_ROOT"><code class="docutils literal notranslate"><span class="pre">RAW_ROOT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.RESORTIT"><code class="docutils literal notranslate"><span class="pre">RESORTIT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.RESORTIT_CSV"><code class="docutils literal notranslate"><span class="pre">RESORTIT_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.RESULTS"><code class="docutils literal notranslate"><span class="pre">RESULTS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.ROOT"><code class="docutils literal notranslate"><span class="pre">ROOT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.SEED"><code class="docutils literal notranslate"><span class="pre">SEED</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.TACO"><code class="docutils literal notranslate"><span class="pre">TACO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.TACO_CSV"><code class="docutils literal notranslate"><span class="pre">TACO_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.TRASHBOX_METAL"><code class="docutils literal notranslate"><span class="pre">TRASHBOX_METAL</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.TRASHBOX_METAL_CSV"><code class="docutils literal notranslate"><span class="pre">TRASHBOX_METAL_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.USE_CPU"><code class="docutils literal notranslate"><span class="pre">USE_CPU</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.USE_GPU"><code class="docutils literal notranslate"><span class="pre">USE_GPU</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.WASTE_CL"><code class="docutils literal notranslate"><span class="pre">WASTE_CL</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.WASTE_CL_CSV"><code class="docutils literal notranslate"><span class="pre">WASTE_CL_CSV</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.ZERO_WASTE"><code class="docutils literal notranslate"><span class="pre">ZERO_WASTE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.shared_data.ZERO_WASTE_CSV"><code class="docutils literal notranslate"><span class="pre">ZERO_WASTE_CSV</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.trainer">waste_detection_system.trainer module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.log_packages_neptune"><code class="docutils literal notranslate"><span class="pre">log_packages_neptune()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.save_best_model"><code class="docutils literal notranslate"><span class="pre">save_best_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.split_dataset"><code class="docutils literal notranslate"><span class="pre">split_dataset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.trainer.tune"><code class="docutils literal notranslate"><span class="pre">tune()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.transformations">waste_detection_system.transformations module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.AlbumentationWrapper"><code class="docutils literal notranslate"><span class="pre">AlbumentationWrapper</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.Clip"><code class="docutils literal notranslate"><span class="pre">Clip</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.Compose"><code class="docutils literal notranslate"><span class="pre">Compose</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.ComposeDouble"><code class="docutils literal notranslate"><span class="pre">ComposeDouble</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.ComposeSingle"><code class="docutils literal notranslate"><span class="pre">ComposeSingle</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.FunctionWrapperDouble"><code class="docutils literal notranslate"><span class="pre">FunctionWrapperDouble</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.FunctionWrapperSingle"><code class="docutils literal notranslate"><span class="pre">FunctionWrapperSingle</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.Repr"><code class="docutils literal notranslate"><span class="pre">Repr</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.apply_nms"><code class="docutils literal notranslate"><span class="pre">apply_nms()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.apply_score_threshold"><code class="docutils literal notranslate"><span class="pre">apply_score_threshold()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.clip_bbs"><code class="docutils literal notranslate"><span class="pre">clip_bbs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.map_class_to_int"><code class="docutils literal notranslate"><span class="pre">map_class_to_int()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.normalize_01"><code class="docutils literal notranslate"><span class="pre">normalize_01()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.transformations.re_normalize"><code class="docutils literal notranslate"><span class="pre">re_normalize()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.utils">waste_detection_system.utils module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.DATASET_TYPES"><code class="docutils literal notranslate"><span class="pre">DATASET_TYPES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.batch_conversion_to_jpg"><code class="docutils literal notranslate"><span class="pre">batch_conversion_to_jpg()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.clean_datasets"><code class="docutils literal notranslate"><span class="pre">clean_datasets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.coco2pascal"><code class="docutils literal notranslate"><span class="pre">coco2pascal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.coco2yolo"><code class="docutils literal notranslate"><span class="pre">coco2yolo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.pascal2coco"><code class="docutils literal notranslate"><span class="pre">pascal2coco()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.pascal2yolo"><code class="docutils literal notranslate"><span class="pre">pascal2yolo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.plot_data_sample"><code class="docutils literal notranslate"><span class="pre">plot_data_sample()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.plot_image_with_annotations"><code class="docutils literal notranslate"><span class="pre">plot_image_with_annotations()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.resize_with_pad"><code class="docutils literal notranslate"><span class="pre">resize_with_pad()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.show"><code class="docutils literal notranslate"><span class="pre">show()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.yolo2coco"><code class="docutils literal notranslate"><span class="pre">yolo2coco()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.utils.yolo2pascal"><code class="docutils literal notranslate"><span class="pre">yolo2pascal()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.waste_detection_dataset">waste_detection_system.waste_detection_dataset module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_dataset.WasteDetectionDataset"><code class="docutils literal notranslate"><span class="pre">WasteDetectionDataset</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system.waste_detection_module">waste_detection_system.waste_detection_module module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.apply_thresholds"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.apply_thresholds()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.configure_optimizers()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.forward"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_test_start()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_train_epoch_end()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_train_epoch_start()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_validation_start()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.test_epoch_end()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.test_step()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.train_dataloader"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.train_dataloader()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.training_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.training_step()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.val_dataloader"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.val_dataloader()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.validation_epoch_end()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.validation_step()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.collate_double"><code class="docutils literal notranslate"><span class="pre">collate_double()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="waste_detection_system.html#waste_detection_system.waste_detection_module.get_dataloader"><code class="docutils literal notranslate"><span class="pre">get_dataloader()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waste_detection_system.html#module-waste_detection_system">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
 </ul>
 </div>
 </section>
@@ -222,10 +82,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Waste Detection System’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="waste_detection_system.html" class="btn btn-neutral float-right" title="waste_detection_system package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

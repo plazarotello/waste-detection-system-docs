@@ -36,9 +36,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">waste_detection_system</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-entry_point.html">Entry point of the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../waste_detection_system-constants.html">Constants</a></li>
 </ul>
 
         </div>
@@ -86,10 +90,10 @@
 <span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
 
 
-<div class="viewcode-block" id="WasteDetectionDataset"><a class="viewcode-back" href="../../waste_detection_system.html#waste_detection_system.waste_detection_dataset.WasteDetectionDataset">[docs]</a><span class="k">class</span> <span class="nc">WasteDetectionDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<div class="viewcode-block" id="WasteDetectionDataset"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_dataset.WasteDetectionDataset">[docs]</a><span class="k">class</span> <span class="nc">WasteDetectionDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The Waste Detection Dataset for use with Pytorch Lightning</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entry Point: main &mdash; Waste Detection System 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Models" href="waste_detection_system-models.html" />
+    <link rel="prev" title="Waste Detection System" href="waste_detection_system.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Waste Detection System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system.html">Waste Detection System</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Entry point of the module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.hyperparameter_search"><code class="docutils literal notranslate"><span class="pre">hyperparameter_search()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.load_weights_from_checkpoint"><code class="docutils literal notranslate"><span class="pre">load_weights_from_checkpoint()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.save_weights"><code class="docutils literal notranslate"><span class="pre">save_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.train_hybrid"><code class="docutils literal notranslate"><span class="pre">train_hybrid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waste_detection_system-constants.html">Constants</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Waste Detection System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Entry Point: main</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/waste_detection_system-entry_point.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-waste_detection_system.main">
+<span id="entry-point-main"></span><h1>Entry Point: main<a class="headerlink" href="#module-waste_detection_system.main" title="Permalink to this heading"></a></h1>
+<p>Waste Detection System</p>
+<p>Collection of entry points to the module, namely the hyperparameter seach
+and trainer.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.configure">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.configure" title="Permalink to this definition"></a></dt>
+<dd><p>Obtains the configuration key-values from the specified JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of the configuration, used for creating the
+checkpoint and results directory</p></li>
+<li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration JSON file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dictionary with the configuration from the JSON file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.hyperparameter_search">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">hyperparameter_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tll</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PathLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/main.html#hyperparameter_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.hyperparameter_search" title="Permalink to this definition"></a></dt>
+<dd><p>Searches optimal hyperparameters (namely maximum batch size an optimal
+initial learning rate)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of the task</p></li>
+<li><p><strong>dataset</strong> (<em>pd.DataFrame</em>) – training dataset to optimize for</p></li>
+<li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration file</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model for the task</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>
+<li><p><strong>tll</strong> (<em>int</em>) – <p>Transfer Learning Level, coded as:</p>
+<ul>
+<li><p>TLL = 0 : train from scratch (all layers)</p></li>
+<li><p>TLL = 1 : use transfer learning and train only the classification and regression heads</p></li>
+<li><p>TLL &gt; 1 : use fine-tuning and train the heads as well as some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+</ul>
+</p></li>
+<li><p><strong>metric</strong> (<em>str</em>) – metric to monitor</p></li>
+<li><p><strong>find_lr</strong> (<em>bool</em><em>, </em><em>optional</em>) – if the task must find an optimal initial learning rate.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>find_batch_size</strong> (<em>bool</em><em>, </em><em>optional</em>) – if the task must find the maximum batch size.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>weights</strong> (<em>Union</em><em>[</em><em>os.PathLike</em><em>, </em><em>str</em><em>, </em><em>Any</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – weights to apply to the model.
+Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.load_weights_from_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">load_weights_from_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#load_weights_from_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.load_weights_from_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>Loads the selected weights in the selected model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the checkpoint holding the weights or the weights directly</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model in which to load the weights</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes of the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>weights of the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.save_weights">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">save_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/main.html#save_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.save_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the weights to disk</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>Any</em>) – weights to save</p></li>
+<li><p><strong>save_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – file saving path</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.train">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resortit_zw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tll</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit_validation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PathLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/main.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.train" title="Permalink to this definition"></a></dt>
+<dd><p>Trains a selected model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_dataset</strong> (<em>pd.DataFrame</em>) – dataset used for training</p></li>
+<li><p><strong>val_dataset</strong> (<em>pd.DataFrame</em>) – dataset used for validation</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the task</p></li>
+<li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration JSON file</p></li>
+<li><p><strong>resortit_zw</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">0</span></code> if ResortIT dataset, <code class="docutils literal notranslate"><span class="pre">1</span></code> if ZeroWaste
+Used for neptune.ai logger</p></li>
+<li><p><strong>metric</strong> (<em>str</em>) – metric to optimize</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model to train</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>
+<li><p><strong>tll</strong> (<em>int</em>) – Transfer Learning Level.
+TLL = 0 : train from scratch (all layers)
+TLL = 1 : use transfer learning and train only the
+classification and regression heads
+TLL &gt; 1 : use fine-tuning and train the heads as well as
+some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+<li><p><strong>limit_validation</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>float</em><em>]</em><em>, </em><em>optional</em>) – if validation dataset must be limited.
+Accepts a percentage or a fllag, in which case
+validation is limited to 25%. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>weights</strong> (<em>Union</em><em>[</em><em>os.PathLike</em><em>, </em><em>str</em><em>, </em><em>Any</em><em>,  </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – weights to initialize the model with.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.train_hybrid">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">train_hybrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resortit_zw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_classifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PathLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel" title="waste_detection_system.feature_extractor.HybridDLModel"><span class="pre">HybridDLModel</span></a></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#train_hybrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.train_hybrid" title="Permalink to this definition"></a></dt>
+<dd><p>Trains a selected hybrid model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_dataset</strong> (<em>pd.DataFrame</em>) – dataset used for training</p></li>
+<li><p><strong>val_dataset</strong> (<em>pd.DataFrame</em>) – dataset used for validation</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the task</p></li>
+<li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration JSON file</p></li>
+<li><p><strong>selected_model</strong> (<em>base.AVAILABLE_MODELS</em>) – model to train</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>
+<li><p><strong>weights</strong> (<em>Union</em><em>[</em><em>os.PathLike</em><em>, </em><em>str</em><em>, </em><em>Any</em><em>,  </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – weights to initialize the model with.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="waste_detection_system.html" class="btn btn-neutral float-left" title="Waste Detection System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waste_detection_system-models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Patricia Lázaro Tello.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
