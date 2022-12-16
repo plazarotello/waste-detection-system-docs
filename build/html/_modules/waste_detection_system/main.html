@@ -72,10 +72,31 @@
   <h1>Source code for waste_detection_system.main</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Waste Detection System</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Collection of entry points to the module. The end user should use </span>
+<span class="sd">only these functions to interact with the module.</span>
 
-<span class="sd">Collection of entry points to the module, namely the hyperparameter seach </span>
-<span class="sd">and trainer. </span>
+<span class="sd">Hyperparameter search</span>
+<span class="sd">    The ``hyperparameter_search()`` function is used to determine the</span>
+<span class="sd">    best starting learning rate and the maximum batch size allowed.</span>
+
+<span class="sd">    This batch size will be halved when training in order to </span>
+<span class="sd">    accomodate for a faster validation phase, using half the batch size</span>
+<span class="sd">    in the train phase and the other half in the validation phase.</span>
+
+<span class="sd">Training scripts</span>
+<span class="sd">    The ``train()`` and ``train_hybrid()`` functions are used to train</span>
+<span class="sd">    the Deep Learning neural network based object detection model and</span>
+<span class="sd">    the traditional Machine Learning classifier, respectively.</span>
+
+<span class="sd">Loading/saving weights</span>
+<span class="sd">    The weights loading is managed by ``load_weights_from_checkpoint()``,</span>
+<span class="sd">    which accepts both the .pt model weights and .ckpt checkpoint from</span>
+<span class="sd">    the lightning.ai training module.</span>
+
+<span class="sd">    The weights saving is used only for saving the model weights in .pt</span>
+<span class="sd">    format, since the .ckpt checkpoint from the lightning.ai module is</span>
+<span class="sd">    already automatically saved by the checkpointing callback.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -95,7 +116,7 @@
 
 
 
-<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Obtains the configuration key-values from the specified JSON file.</span>
 
 <span class="sd">    Args:</span>
@@ -105,6 +126,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dict[str, Any]: a dictionary with the configuration from the JSON file</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">configuration</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">chk_dir</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
@@ -137,7 +160,7 @@
         <span class="s1">&#39;scheduler&#39;</span> <span class="p">:</span> <span class="n">scheduler</span><span class="p">,</span> <span class="s1">&#39;scheduler_steps&#39;</span> <span class="p">:</span> <span class="n">scheduler_steps</span><span class="p">,</span>
         <span class="s1">&#39;lr&#39;</span> <span class="p">:</span> <span class="n">lr</span><span class="p">,</span> <span class="s1">&#39;bs&#39;</span> <span class="p">:</span> <span class="n">bs</span><span class="p">,</span> <span class="s1">&#39;weight_decay&#39;</span> <span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
         <span class="s1">&#39;checkpoint_dir&#39;</span> <span class="p">:</span> <span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s1">&#39;results_dir&#39;</span> <span class="p">:</span> <span class="n">results_dir</span>
-    <span class="p">}</span></div>
+    <span class="p">}</span>
 
 
 
@@ -150,22 +173,18 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        name (str): name of the task</span>
-<span class="sd">        dataset (pd.DataFrame): training dataset to optimize for</span>
+<span class="sd">        dataset (DataFrame): training dataset to optimize for</span>
 <span class="sd">        config (Union[Path, str]): path to the configuration file</span>
-<span class="sd">        selected_model (base.AVAILABLE_MODELS): model for the task</span>
+<span class="sd">        selected_model (AVAILABLE_MODELS): model for the task</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
-<span class="sd">        tll (int): Transfer Learning Level, coded as:</span>
-<span class="sd">        </span>
-<span class="sd">                        - TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                        - TLL = 1 : use transfer learning and train only the classification and regression heads</span>
-<span class="sd">                        - TLL &gt; 1 : use fine-tuning and train the heads as well as some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        tll (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 <span class="sd">        metric (str): metric to monitor</span>
 <span class="sd">        find_lr (bool, optional): if the task must find an optimal initial learning rate. </span>
-<span class="sd">                                Defaults to ``True``.</span>
+<span class="sd">                                Defaults to ``True``</span>
 <span class="sd">        find_batch_size (bool, optional): if the task must find the maximum batch size. </span>
-<span class="sd">                                Defaults to ``True``.</span>
-<span class="sd">        weights (Union[os.PathLike, str, Any, None], optional): weights to apply to the model.</span>
-<span class="sd">                                Defaults to None.</span>
+<span class="sd">                                Defaults to ``True``</span>
+<span class="sd">        weights (Union[PathLike, str, Any, None], optional): weights to apply to the model.</span>
+<span class="sd">                                Defaults to None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">configuration</span> <span class="o">=</span> <span class="n">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
@@ -202,26 +221,21 @@
     <span class="sd">&quot;&quot;&quot;Trains a selected model</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        train_dataset (pd.DataFrame): dataset used for training</span>
-<span class="sd">        val_dataset (pd.DataFrame): dataset used for validation</span>
+<span class="sd">        train_dataset (DataFrame): dataset used for training</span>
+<span class="sd">        val_dataset (DataFrame): dataset used for validation</span>
 <span class="sd">        name (str): name of the task</span>
 <span class="sd">        config (Union[Path, str]): path to the configuration JSON file</span>
 <span class="sd">        resortit_zw (int): ``0`` if ResortIT dataset, ``1`` if ZeroWaste</span>
 <span class="sd">                            Used for neptune.ai logger</span>
 <span class="sd">        metric (str): metric to optimize</span>
-<span class="sd">        selected_model (base.AVAILABLE_MODELS): model to train</span>
+<span class="sd">        selected_model (AVAILABLE_MODELS): model to train</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
-<span class="sd">        tll (int): Transfer Learning Level.</span>
-<span class="sd">                    TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                    TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                    classification and regression heads</span>
-<span class="sd">                    TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                    some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        tll (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 <span class="sd">        limit_validation (Union[bool, float], optional): if validation dataset must be limited. </span>
 <span class="sd">                                                        Accepts a percentage or a fllag, in which case </span>
-<span class="sd">                                                        validation is limited to 25%. Defaults to ``False``.</span>
+<span class="sd">                                                        validation is limited to 25%. Defaults to ``False``</span>
 <span class="sd">        weights (Union[os.PathLike, str, Any,  None], optional): weights to initialize the model with. </span>
-<span class="sd">                                                                Defaults to ``None``.</span>
+<span class="sd">                                                                Defaults to ``None``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">configuration</span> <span class="o">=</span> <span class="n">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     
@@ -246,8 +260,7 @@
 
 
 <div class="viewcode-block" id="train_hybrid"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.train_hybrid">[docs]</a><span class="k">def</span> <span class="nf">train_hybrid</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">val_dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">resortit_zw</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
+                <span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
                 <span class="n">selected_classifier</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">,</span>
                 <span class="n">weights</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span>  <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HybridDLModel</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Trains a selected hybrid model</span>
@@ -256,19 +269,20 @@
 <span class="sd">        train_dataset (pd.DataFrame): dataset used for training</span>
 <span class="sd">        val_dataset (pd.DataFrame): dataset used for validation</span>
 <span class="sd">        name (str): name of the task</span>
-<span class="sd">        config (Union[Path, str]): path to the configuration JSON file</span>
-<span class="sd">        selected_model (base.AVAILABLE_MODELS): model to train</span>
+<span class="sd">        selected_model (AVAILABLE_MODELS): model to use as feature extractor</span>
+<span class="sd">        selected_classifier (AVAILABLE_CLASSIFIER): classifier to use as classification head</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
-<span class="sd">        weights (Union[os.PathLike, str, Any,  None], optional): weights to initialize the model with. </span>
-<span class="sd">                                                                Defaults to ``None``.</span>
+<span class="sd">        weights (Union[PathLike, str, Any,  None], optional): weights to initialize the model with. </span>
+<span class="sd">                                                                Defaults to ``None``</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HybridDLModel : model composed of feature extractor and traditional ML classifier</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-    <span class="n">configuration</span> <span class="o">=</span> <span class="n">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-    <span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;epochs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">weights</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    
     <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get_hybrid_model</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">chosen_model</span><span class="o">=</span><span class="n">selected_model</span><span class="p">,</span>
             <span class="n">chosen_classifier</span><span class="o">=</span><span class="n">selected_classifier</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -305,7 +319,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint holding the weights or the weights directly</span>
-<span class="sd">        selected_model (base.AVAILABLE_MODELS): model in which to load the weights</span>
+<span class="sd">        selected_model (AVAILABLE_MODELS): model in which to load the weights</span>
 <span class="sd">        num_classes (int): number of classes of the model</span>
 
 <span class="sd">    Returns:</span>

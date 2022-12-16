@@ -72,10 +72,11 @@
   <h1>Source code for waste_detection_system.utils</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Waste Detection System: Utilities</span>
-
-<span class="sd">Collection of general utility functions</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Collection of utility functions regarding bounding boxes&#39; format </span>
+<span class="sd">conversion, dataset wrangling functions and image resizing.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
@@ -91,43 +92,34 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">pybboxes</span> <span class="k">as</span> <span class="nn">pbx</span>
 
 
 <span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
 
 
-<div class="viewcode-block" id="yolo2pascal"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.yolo2pascal">[docs]</a><span class="k">def</span> <span class="nf">yolo2pascal</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<div class="viewcode-block" id="yolo2pascal"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.yolo2pascal">[docs]</a><span class="k">def</span> <span class="nf">yolo2pascal</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
     <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Converts the bounding box from YOLO format to Pascal format</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        x (int): x</span>
-<span class="sd">        y (int): y</span>
-<span class="sd">        w (int): width</span>
-<span class="sd">        h (int): height</span>
+<span class="sd">        x (float): x</span>
+<span class="sd">        y (float): y</span>
+<span class="sd">        w (float): width</span>
+<span class="sd">        h (float): height</span>
 <span class="sd">        img_w (int): image width</span>
 <span class="sd">        img_h (int): image height</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[int, int, int, int]: xyxy bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">img_w</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">y</span><span class="o">-</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">img_h</span><span class="p">)</span>
-    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">img_w</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">img_h</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">x1</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">x2</span> <span class="o">&gt;</span> <span class="n">img_w</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">x2</span> <span class="o">=</span> <span class="n">img_w</span><span class="o">-</span><span class="mi">1</span>
-    <span class="k">if</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">y1</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">y2</span> <span class="o">&gt;</span> <span class="n">img_h</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">y2</span> <span class="o">=</span> <span class="n">img_h</span><span class="o">-</span><span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span></div>
-
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;yolo&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;voc&#39;</span><span class="p">,</span> 
+                            <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">))</span> <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="pascal2yolo"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.pascal2yolo">[docs]</a><span class="k">def</span> <span class="nf">pascal2yolo</span><span class="p">(</span><span class="n">x1</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y1</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x2</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y2</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
-    <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Converts from Pascal to YOLO format</span>
 
 <span class="sd">    Args:</span>
@@ -139,12 +131,12 @@
 <span class="sd">        img_h (int): image height</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[int, int, int, int]: xywh bounding box</span>
+<span class="sd">        Tuple[float, float, float, float]: xywh bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x2</span><span class="o">+</span><span class="n">x1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">img_w</span><span class="p">)),</span> <span class="nb">int</span><span class="p">((</span><span class="n">y2</span><span class="o">+</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">img_h</span><span class="p">))</span>
-    <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x2</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">/</span><span class="n">img_w</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">y2</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="n">img_h</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span></div>
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;voc&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;yolo&#39;</span><span class="p">,</span> 
+                            <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">))</span> <span class="c1"># type: ignore</span></div>
 
 
 <div class="viewcode-block" id="coco2pascal"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.coco2pascal">[docs]</a><span class="k">def</span> <span class="nf">coco2pascal</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
@@ -160,8 +152,9 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[int, int, int, int]: xyxy bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span></div>
-
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;coco&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;voc&#39;</span><span class="p">)</span> <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="pascal2coco"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.pascal2coco">[docs]</a><span class="k">def</span> <span class="nf">pascal2coco</span><span class="p">(</span><span class="n">x1</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y1</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x2</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
     <span class="n">y2</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -176,30 +169,34 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[int, int, int, int]: xywh bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="o">-</span><span class="n">x1</span><span class="p">,</span> <span class="n">y2</span><span class="o">-</span><span class="n">y1</span></div>
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;voc&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;coco&#39;</span><span class="p">)</span> <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="yolo2coco"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.yolo2coco">[docs]</a><span class="k">def</span> <span class="nf">yolo2coco</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<div class="viewcode-block" id="yolo2coco"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.yolo2coco">[docs]</a><span class="k">def</span> <span class="nf">yolo2coco</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
     <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Converts from YOLO to COCO format</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        x (int): x</span>
-<span class="sd">        y (int): y</span>
-<span class="sd">        w (int): width of the bounding box</span>
-<span class="sd">        h (int): height of the bounding box</span>
+<span class="sd">        x (float): x</span>
+<span class="sd">        y (float): y</span>
+<span class="sd">        w (float): width of the bounding box</span>
+<span class="sd">        h (float): height of the bounding box</span>
 <span class="sd">        img_w (int): image width</span>
 <span class="sd">        img_h (int): image height</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[int, int, int, int]: xywh bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">yolo2pascal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pascal2coco</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;yolo&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;coco&#39;</span><span class="p">,</span> 
+                            <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">))</span> <span class="c1"># type: ignore</span></div>
 
 
 <div class="viewcode-block" id="coco2yolo"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.coco2yolo">[docs]</a><span class="k">def</span> <span class="nf">coco2yolo</span><span class="p">(</span><span class="n">x</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
-    <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">img_w</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">img_h</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Converts from COCO to YOLO format</span>
 
 <span class="sd">    Args:</span>
@@ -211,11 +208,12 @@
 <span class="sd">        img_h (int): image height</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[int, int, int, int]: xywh bounding box</span>
+<span class="sd">        Tuple[float, float, float, float]: xywh bounding box</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">coco2pascal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pascal2yolo</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">)</span></div>
-
+    <span class="k">return</span> <span class="n">pbx</span><span class="o">.</span><span class="n">convert_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> 
+                            <span class="n">from_type</span><span class="o">=</span><span class="s1">&#39;coco&#39;</span><span class="p">,</span> 
+                            <span class="n">to_type</span><span class="o">=</span><span class="s1">&#39;yolo&#39;</span><span class="p">,</span> 
+                            <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">))</span> <span class="c1"># type: ignore</span></div>
 
 
 <div class="viewcode-block" id="show"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.utils.show">[docs]</a><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">imgs</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">figsize</span> <span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">title</span> <span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

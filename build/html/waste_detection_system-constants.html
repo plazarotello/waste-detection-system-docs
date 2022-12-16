@@ -88,50 +88,29 @@
 <p>This script holds different constants and enumerators needed in the
 rest of the scripts in the module. It defines the directories’s structure
 as such:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>candidate-dataset: temporary folder to hold a dataset while EDA</p></li>
-<li><p>complementary-dataset: ResortIT dataset ready for training</p></li>
-<li><dl class="simple">
-<dt>config</dt><dd><ul>
-<li><p>models: configurations for the models</p></li>
-<li><p>config.json: general configuration</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>dataset: ZeroWaste dataset ready for training</p></li>
-<li><dl class="simple">
-<dt>raw-datasets</dt><dd><ul>
-<li><p>cig_butts</p></li>
-<li><p>CompostNet</p></li>
-<li><p>drinking-waste</p></li>
-<li><p>ResortIt</p></li>
-<li><p>TACO</p></li>
-<li><p>Trashbox-metal</p></li>
-<li><p>WasteClassification</p></li>
-<li><dl class="simple">
-<dt>zero-waste</dt><dd><ul>
-<li><p>zerowaste-f</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>results: holds the results</dt><dd><ul>
-<li><p>final_dataset.csv</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>waste_detection_system: the source code</p></li>
-<li><p>neptune.secret: plain text file with the API key</p></li>
-</ul>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>root
+├── candidate-dataset: temporary folder to hold a dataset while EDA
+├── complementary-dataset: ResortIT dataset ready for training
+├── config
+│   ├── models: configurations for the models
+│   └── config.json: general configuration
+├── dataset: ZeroWaste dataset ready for training
+├── raw-datasets
+│   ├── cig_butts
+│   ├── CompostNet
+│   ├── drinking-waste
+│   ├── ResortIt
+│   ├── TACO
+│   ├── Trashbox-metal
+│   ├── WasteClassification
+│   ├── zero-waste
+│       └── zerowaste-f
+├── results: holds the results
+│   └── final_dataset.csv
+├── *waste_detection_system*: the source code
+└── neptune.secret: plain text file with the API key
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">AVAILABLE_CLASSIFIERS</span></span><a class="headerlink" href="#waste_detection_system.shared_data.AVAILABLE_CLASSIFIERS" title="Permalink to this definition"></a></dt>

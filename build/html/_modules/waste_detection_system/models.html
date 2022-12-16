@@ -72,13 +72,35 @@
   <h1>Source code for waste_detection_system.models</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Waste Detection System: models</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _fasterrcnn: https://pytorch.org/vision/main/models/generated/torchvision.models.detection.fasterrcnn_resnet50_fpn.html#torchvision.models.detection.fasterrcnn_resnet50_fpn</span>
+<span class="sd">.. _fcos: https://pytorch.org/vision/main/models/generated/torchvision.models.detection.fcos_resnet50_fpn.html#torchvision.models.detection.fcos_resnet50_fpn</span>
+<span class="sd">.. _retinanet: https://pytorch.org/vision/main/models/generated/torchvision.models.detection.retinanet_resnet50_fpn_v2.html#torchvision.models.detection.retinanet_resnet50_fpn_v2</span>
+<span class="sd">.. _ssd: https://pytorch.org/vision/main/models/generated/torchvision.models.detection.ssd300_vgg16.html#torchvision.models.detection.ssd300_vgg16</span>
+<span class="sd">.. _knn: https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html</span>
+<span class="sd">.. _svm: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html</span>
 
-<span class="sd">Collection of available models in the Waste Detection System:</span>
-<span class="sd">- Faster R-CNN</span>
-<span class="sd">- FCOS</span>
-<span class="sd">- RetinaNet</span>
-<span class="sd">- SSD</span>
+<span class="sd">Collection of allowed object detection models in the Waste Detection System, </span>
+<span class="sd">as well as functions to freeze and unfreeze layers given a Transfer Learning Level,</span>
+<span class="sd">a model creation factory for object detection models and hybrid Deep Learning </span>
+<span class="sd">models.</span>
+
+<span class="sd">Deep Learning object detection models</span>
+<span class="sd">    - Faster R-CNN : `Faster R-CNN Pytorch documentation &lt;fasterrcnn_&gt;`_</span>
+<span class="sd">    - FCOS : `FCOS Pytorch documentation &lt;fcos_&gt;`_</span>
+<span class="sd">    - RetinaNet : `RetinaNet Pytorch documentation &lt;retinanet_&gt;`_</span>
+<span class="sd">    - SSD : `SSD Pytorch documentation &lt;ssd_&gt;`_</span>
+
+<span class="sd">Hybrid Deep Learning/traditional Machine Learning models</span>
+<span class="sd">    It takes a Deep Learning object detection model (of the mentioned above) and</span>
+<span class="sd">    a traditional Machine Learning classifier of the following:</span>
+<span class="sd">        - k-Nearest Neighbors Classifier: `scikit-learn documentation &lt;knn_&gt;`_</span>
+<span class="sd">        - SVM Classifier: `scikit-learn documentation &lt;svm_&gt;`_</span>
+
+<span class="sd">.. important::</span>
+<span class="sd">    To train a hybrid Deep Learning model, it is necessary to fully train the object </span>
+<span class="sd">    detector and only then, with the best weights saved, use it to create the feature</span>
+<span class="sd">    extractor of the hybrid model.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
@@ -119,7 +141,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model</span>
-<span class="sd">        transfer_learning_level (int): transfer learning level or TLL</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trainable_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
     <span class="n">total_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
@@ -157,12 +179,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes (int): number of classes</span>
 <span class="sd">        chosen_model (AVAILABLE_MODELS): selected model</span>
-<span class="sd">        transfer_learning_level (int): transfer learning level or TLL.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Union[FasterRCNN, FCOS, SSD, RetinaNet]: constructed model</span>
@@ -206,20 +223,17 @@
 
 
 
-<div class="viewcode-block" id="apply_tll_to_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">FasterRCNN</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model (FasterRCNN): model</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FasterRCNN: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TLL=0 : train from scratch</span>
     <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -261,23 +275,20 @@
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">roi_heads</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
             <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">model</span></div>
+    <span class="k">return</span> <span class="n">model</span>
 
 
-<div class="viewcode-block" id="apply_tll_to_fcos_retinanet"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_fcos_retinanet">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">],</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FCOS</span><span class="p">,</span> <span class="n">RetinaNet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model (Union[FCOS, RetinaNet]): model</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Union[FCOS, RetinaNet]: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">    </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TLL=0 : train from scratch</span>
     <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -327,23 +338,20 @@
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
             <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">model</span></div>
+    <span class="k">return</span> <span class="n">model</span>
 
 
-<div class="viewcode-block" id="apply_tll_to_ssd"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.apply_tll_to_ssd">[docs]</a><span class="k">def</span> <span class="nf">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model (SSD): model</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        SSD: model with the correct number of layers frozen/unfrozen</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TLL=0 : train from scratch</span>
     <span class="k">if</span> <span class="n">transfer_learning_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -396,23 +404,20 @@
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
             <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">print_stats</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">model</span></div>
+    <span class="k">return</span> <span class="n">model</span>
 
 
-<div class="viewcode-block" id="get_fasterrcnn"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_fasterrcnn">[docs]</a><span class="k">def</span> <span class="nf">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``FasterRCNN`` model</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FasterRCNN: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">FasterRCNN</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
@@ -420,23 +425,20 @@
             <span class="n">weights</span><span class="o">=</span><span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">apply_tll_to_fasterrcnn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
 
-<div class="viewcode-block" id="get_fcos"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_fcos">[docs]</a><span class="k">def</span> <span class="nf">get_fcos</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FCOS</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_fcos</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FCOS</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``FCOS`` model</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FCOS: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">FCOS</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
@@ -444,23 +446,20 @@
             <span class="n">weights</span><span class="o">=</span><span class="n">FCOS_ResNet50_FPN_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
 
-<div class="viewcode-block" id="get_retinanet"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_retinanet">[docs]</a><span class="k">def</span> <span class="nf">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetinaNet</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_retinanet</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetinaNet</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``RetinaNet`` model</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RetinaNet: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RetinaNet</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
@@ -468,23 +467,20 @@
             <span class="n">weights</span><span class="o">=</span><span class="n">RetinaNet_ResNet50_FPN_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="o">=</span><span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">apply_tll_to_fcos_retinanet</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="o">=</span><span class="n">transfer_learning_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     
 
-<div class="viewcode-block" id="get_ssd"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_ssd">[docs]</a><span class="k">def</span> <span class="nf">get_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transfer_learning_level</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Constructs a ``SSD`` model</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes (int): number of classes</span>
-<span class="sd">        transfer_learning_level (int): Transfer Learning Level.</span>
-<span class="sd">                                        TLL = 0 : train from scratch (all layers)</span>
-<span class="sd">                                        TLL = 1 : use transfer learning and train only the </span>
-<span class="sd">                                        classification and regression heads</span>
-<span class="sd">                                        TLL &gt; 1 : use fine-tuning and train the heads as well as</span>
-<span class="sd">                                        some more layers. MINIMUM = 2, MAXIMUM = 5</span>
-
+<span class="sd">        transfer_learning_level (int): Transfer Learning Level. For more information, see :ref:`here &lt;tll&gt;`</span>
+<span class="sd">        </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        SSD: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SSD</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
@@ -492,7 +488,7 @@
             <span class="n">weights</span><span class="o">=</span><span class="n">SSD300_VGG16_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span> <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span> <span class="c1"># type: ignore</span>
 </pre></div>
 
            </div>

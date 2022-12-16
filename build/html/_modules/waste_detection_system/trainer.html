@@ -72,12 +72,6 @@
   <h1>Source code for waste_detection_system.trainer</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Waste Detection System: Trainer</span>
-
-<span class="sd">Module holding the hyperparameter tuning and training scripts.</span>
-<span class="sd">Includes auxiliary functions to log to neptune.ai</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">lightning</span> <span class="kn">import</span> <span class="n">Trainer</span>
 <span class="kn">from</span> <span class="nn">lightning.lite.utilities.seed</span> <span class="kn">import</span> <span class="n">seed_everything</span>
@@ -107,7 +101,7 @@
 
 
 
-<div class="viewcode-block" id="split_dataset"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.split_dataset">[docs]</a><span class="k">def</span> <span class="nf">split_dataset</span><span class="p">(</span><span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">split_dataset</span><span class="p">(</span><span class="n">dataset</span> <span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Splits a dataset in train (85%) and validation (15%)</span>
 
 <span class="sd">    Args:</span>
@@ -115,12 +109,14 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[DataFrame, DataFrame]: train dataset and validation dataset, in that order</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
     <span class="n">train_paths</span><span class="p">,</span> <span class="n">val_paths</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">train_paths</span><span class="p">)],</span>
-           <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">val_paths</span><span class="p">)])</span></div>
+           <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">val_paths</span><span class="p">)])</span>
 
 
 
@@ -371,11 +367,13 @@
     <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">ckpt_path</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="log_packages_neptune"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.log_packages_neptune">[docs]</a><span class="k">def</span> <span class="nf">log_packages_neptune</span><span class="p">(</span><span class="n">neptune_logger</span> <span class="p">:</span> <span class="n">NeptuneLogger</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">log_packages_neptune</span><span class="p">(</span><span class="n">neptune_logger</span> <span class="p">:</span> <span class="n">NeptuneLogger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Flushes the logs of the run</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        neptune_logger (NeptuneLogger): neptune.ai logger</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dists</span> <span class="o">=</span> <span class="n">importlib_metadata</span><span class="o">.</span><span class="n">distributions</span><span class="p">()</span>
     <span class="n">packages</span> <span class="o">=</span> <span class="p">{</span>
@@ -386,17 +384,19 @@
         <span class="n">packages</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">]</span>
     <span class="p">)</span>
 
-    <span class="n">neptune_logger</span><span class="o">.</span><span class="n">experiment</span><span class="p">[</span><span class="s1">&#39;packages&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">File</span><span class="o">.</span><span class="n">as_html</span><span class="p">(</span><span class="n">packages_df</span><span class="p">))</span></div>
+    <span class="n">neptune_logger</span><span class="o">.</span><span class="n">experiment</span><span class="p">[</span><span class="s1">&#39;packages&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">File</span><span class="o">.</span><span class="n">as_html</span><span class="p">(</span><span class="n">packages_df</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="save_best_model"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.trainer.save_best_model">[docs]</a><span class="k">def</span> <span class="nf">save_best_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">save_directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">save_best_model</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">save_directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Copies the best model to the save directory</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        checkpoint_path (pathlib.Path): best model path</span>
 <span class="sd">        save_directory (pathlib.Path): save directory</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="n">save_directory</span><span class="p">)</span></div>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="n">save_directory</span><span class="p">)</span>
 </pre></div>
 
            </div>

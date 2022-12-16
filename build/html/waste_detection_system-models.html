@@ -44,15 +44,8 @@
 <li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Available models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-waste_detection_system.models">Object detection models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fasterrcnn()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_fcos_retinanet"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_fcos_retinanet()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.apply_tll_to_ssd"><code class="docutils literal notranslate"><span class="pre">apply_tll_to_ssd()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_base_model"><code class="docutils literal notranslate"><span class="pre">get_base_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_fasterrcnn"><code class="docutils literal notranslate"><span class="pre">get_fasterrcnn()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_fcos"><code class="docutils literal notranslate"><span class="pre">get_fcos()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_hybrid_model"><code class="docutils literal notranslate"><span class="pre">get_hybrid_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_retinanet"><code class="docutils literal notranslate"><span class="pre">get_retinanet()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.get_ssd"><code class="docutils literal notranslate"><span class="pre">get_ssd()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.load_partial_weights"><code class="docutils literal notranslate"><span class="pre">load_partial_weights()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.pretty_summary"><code class="docutils literal notranslate"><span class="pre">pretty_summary()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.models.print_stats"><code class="docutils literal notranslate"><span class="pre">print_stats()</span></code></a></li>
@@ -62,7 +55,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-waste_detection_system.feature_extractor">Hybrid Deep Learning models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.feature_extractor.FeatureExtractor"><code class="docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.feature_extractor.FeatureExtractor.forward"><code class="docutils literal notranslate"><span class="pre">FeatureExtractor.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.feature_extractor.FeatureExtractor.save_features"><code class="docutils literal notranslate"><span class="pre">FeatureExtractor.save_features()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.feature_extractor.HybridDLModel"><code class="docutils literal notranslate"><span class="pre">HybridDLModel</span></code></a><ul>
@@ -107,87 +99,34 @@
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this heading"></a></h1>
 <section id="module-waste_detection_system.models">
 <span id="object-detection-models"></span><h2>Object detection models<a class="headerlink" href="#module-waste_detection_system.models" title="Permalink to this heading"></a></h2>
-<p>Waste Detection System: models</p>
-<p>Collection of available models in the Waste Detection System:
-- Faster R-CNN
-- FCOS
-- RetinaNet
-- SSD</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.apply_tll_to_fasterrcnn">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">apply_tll_to_fasterrcnn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FasterRCNN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FasterRCNN</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#apply_tll_to_fasterrcnn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.apply_tll_to_fasterrcnn" title="Permalink to this definition"></a></dt>
-<dd><p>Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>FasterRCNN</em>) – model</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+<p>Collection of allowed object detection models in the Waste Detection System,
+as well as functions to freeze and unfreeze layers given a Transfer Learning Level,
+a model creation factory for object detection models and hybrid Deep Learning
+models.</p>
+<dl>
+<dt>Deep Learning object detection models</dt><dd><ul class="simple">
+<li><p>Faster R-CNN : <a class="reference external" href="https://pytorch.org/vision/main/models/generated/torchvision.models.detection.fasterrcnn_resnet50_fpn.html#torchvision.models.detection.fasterrcnn_resnet50_fpn">Faster R-CNN Pytorch documentation</a></p></li>
+<li><p>FCOS : <a class="reference external" href="https://pytorch.org/vision/main/models/generated/torchvision.models.detection.fcos_resnet50_fpn.html#torchvision.models.detection.fcos_resnet50_fpn">FCOS Pytorch documentation</a></p></li>
+<li><p>RetinaNet : <a class="reference external" href="https://pytorch.org/vision/main/models/generated/torchvision.models.detection.retinanet_resnet50_fpn_v2.html#torchvision.models.detection.retinanet_resnet50_fpn_v2">RetinaNet Pytorch documentation</a></p></li>
+<li><p>SSD : <a class="reference external" href="https://pytorch.org/vision/main/models/generated/torchvision.models.detection.ssd300_vgg16.html#torchvision.models.detection.ssd300_vgg16">SSD Pytorch documentation</a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>model with the correct number of layers frozen/unfrozen</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>FasterRCNN</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.apply_tll_to_fcos_retinanet">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">apply_tll_to_fcos_retinanet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#apply_tll_to_fcos_retinanet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.apply_tll_to_fcos_retinanet" title="Permalink to this definition"></a></dt>
-<dd><p>Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Union</em><em>[</em><em>FCOS</em><em>, </em><em>RetinaNet</em><em>]</em>) – model</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+<dt>Hybrid Deep Learning/traditional Machine Learning models</dt><dd><p>It takes a Deep Learning object detection model (of the mentioned above) and
+a traditional Machine Learning classifier of the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>k-Nearest Neighbors Classifier: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html">scikit-learn documentation</a></p></li>
+<li><p>SVM Classifier: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html">scikit-learn documentation</a></p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>model with the correct number of layers frozen/unfrozen</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Union[FCOS, RetinaNet]</p>
+</div></blockquote>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.apply_tll_to_ssd">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">apply_tll_to_ssd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SSD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SSD</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#apply_tll_to_ssd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.apply_tll_to_ssd" title="Permalink to this definition"></a></dt>
-<dd><p>Applies Transfer Learning Level to the given model, freezing and unfreezing the corresponding layers</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>SSD</em>) – model</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>model with the correct number of layers frozen/unfrozen</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SSD</p>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To train a hybrid Deep Learning model, it is necessary to fully train the object
+detector and only then, with the best weights saved, use it to create the feature
+extractor of the hybrid model.</p>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.get_base_model">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_base_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FasterRCNN</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SSD</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_base_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_base_model" title="Permalink to this definition"></a></dt>
@@ -197,12 +136,7 @@ some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
 <li><p><strong>chosen_model</strong> (<em>AVAILABLE_MODELS</em>) – selected model</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – transfer learning level or TLL.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
+<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level. For more information, see <a class="reference internal" href="waste_detection_system.html#tll"><span class="std std-ref">here</span></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -218,109 +152,9 @@ some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.get_fasterrcnn">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_fasterrcnn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FasterRCNN</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_fasterrcnn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_fasterrcnn" title="Permalink to this definition"></a></dt>
-<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code> model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>constructed model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>FasterRCNN</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.get_fcos">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_fcos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FCOS</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_fcos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_fcos" title="Permalink to this definition"></a></dt>
-<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">FCOS</span></code> model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>constructed model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>FCOS</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.get_hybrid_model">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_hybrid_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_classifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Classifiers</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waste_detection_system.feature_extractor.HybridDLModel" title="waste_detection_system.feature_extractor.HybridDLModel"><span class="pre">HybridDLModel</span></a></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_hybrid_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_hybrid_model" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.get_retinanet">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_retinanet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RetinaNet</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_retinanet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_retinanet" title="Permalink to this definition"></a></dt>
-<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code> model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>constructed model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>RetinaNet</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.models.get_ssd">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_ssd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SSD</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_ssd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_ssd" title="Permalink to this definition"></a></dt>
-<dd><p>Constructs a <code class="docutils literal notranslate"><span class="pre">SSD</span></code> model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level.
-TLL = 0 : train from scratch (all layers)
-TLL = 1 : use transfer learning and train only the
-classification and regression heads
-TLL &gt; 1 : use fine-tuning and train the heads as well as
-some more layers. MINIMUM = 2, MAXIMUM = 5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>constructed model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SSD</p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.load_partial_weights">
@@ -362,7 +196,7 @@ and model, the weights regarding that layer won’t be loaded.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>Union</em><em>[</em><em>FasterRCNN</em><em>, </em><em>FCOS</em><em>, </em><em>SSD</em><em>, </em><em>RetinaNet</em><em>]</em>) – model</p></li>
-<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – transfer learning level or TLL</p></li>
+<li><p><strong>transfer_learning_level</strong> (<em>int</em>) – Transfer Learning Level. For more information, see <a class="reference internal" href="waste_detection_system.html#tll"><span class="std std-ref">here</span></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -392,28 +226,42 @@ both of them being lists of tensors</p>
 </section>
 <section id="module-waste_detection_system.feature_extractor">
 <span id="hybrid-deep-learning-models"></span><h2>Hybrid Deep Learning models<a class="headerlink" href="#module-waste_detection_system.feature_extractor" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the Hybrid Deep Learning models, the system requires that the user
+previously trained the object detection module and applied the
+corresponding weights.</p>
+<p>The Hybrid Deep Learning model will <em>not</em> train the object detection module;
+insted, when training the Machine Learning classifier the object detection
+module will be put in <code class="docutils literal notranslate"><span class="pre">eval()</span></code> mode.</p>
+</div>
 <dl class="py class">
 <dt class="sig sig-object py" id="waste_detection_system.feature_extractor.FeatureExtractor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.feature_extractor.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#FeatureExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.FeatureExtractor" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Intermediate module that transforms the object detection model into
+a feature extractor that returns feature maps and bounding boxes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="waste_detection_system.feature_extractor.FeatureExtractor.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#FeatureExtractor.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.FeatureExtractor.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Applies the input tensor to the model and retrieves the
+results from the forward hook</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em>) – input tensor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dictionary with <code class="docutils literal notranslate"><span class="pre">bounding_boxes</span></code> and</dt><dd><p><code class="docutils literal notranslate"><span class="pre">features</span></code> keys</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, List[Tensor]]</p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="waste_detection_system.feature_extractor.FeatureExtractor.save_features">
-<span class="sig-name descname"><span class="pre">save_features</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#FeatureExtractor.save_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.FeatureExtractor.save_features" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -421,6 +269,11 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="waste_detection_system.feature_extractor.HybridDLModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.feature_extractor.</span></span><span class="sig-name descname"><span class="pre">HybridDLModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_extractor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#waste_detection_system.feature_extractor.FeatureExtractor" title="waste_detection_system.feature_extractor.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Classifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#HybridDLModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.HybridDLModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Hybrid Deep Learning/traditional Machine Learning model that uses the
+Deep Learning object detector model to obtain the bounding boxes and
+the feature maps associated, and a traditional Machine Learning
+classifier algorithm to predict the bounding box class given its
+feature map.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="waste_detection_system.feature_extractor.HybridDLModel.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#HybridDLModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.HybridDLModel.forward" title="Permalink to this definition"></a></dt>
@@ -435,7 +288,7 @@ registered hooks while the latter silently ignores them.</p>
 <dd class="field-even"><p><dl class="simple">
 <dt>the output from the model.</dt><dd><p>During training, it returns the classifier loss.
 During testing, it returns a list of dictionaries (one for each image) that contains
-‘boxes’, ‘labels’, ‘scores’.</p>
+<code class="docutils literal notranslate"><span class="pre">boxes</span></code>, <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">scores</span></code>.</p>
 </dd>
 </dl>
 </p>
@@ -443,14 +296,35 @@ During testing, it returns a list of dictionaries (one for each image) that cont
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>result (List[Dict[str, Tensor]])</p>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – if the model is training but doesn’t have targets</p>
+</dd>
 </dl>
-<p>Raises:</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="waste_detection_system.feature_extractor.HybridDLModel.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/feature_extractor.html#HybridDLModel.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.feature_extractor.HybridDLModel.validate" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Custom validation step to be used in conjunction with the model in <code class="docutils literal notranslate"><span class="pre">eval()</span></code> mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>List</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em><em>]</em>) – results from the <code class="docutils literal notranslate"><span class="pre">forward()</span></code> function in <code class="docutils literal notranslate"><span class="pre">eval()</span></code> mode</p></li>
+<li><p><strong>y</strong> (<em>List</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em><em>]</em>) – targets, as passed to the <code class="docutils literal notranslate"><span class="pre">forward()</span></code> function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dictionary with only one key <code class="docutils literal notranslate"><span class="pre">classification_loss</span></code> that holds the</dt><dd><p>classification loss</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

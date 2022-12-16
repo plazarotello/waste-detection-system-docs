@@ -72,10 +72,15 @@
   <h1>Source code for waste_detection_system.waste_detection_dataset</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Waste Detection System: Dataset</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _tutorial: https://github.com/johschmidt42/PyTorch-Object-Detection-Faster-RCNN-Tutorial</span>
+<span class="sd">.. _tutorial2: https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70</span>
+<span class="sd">.. _author: https://github.com/johschmidt42</span>
 
-<span class="sd">Class representing the dataset used in the Waste Detection System</span>
-<span class="sd">Created following the tutorial on https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70</span>
+<span class="sd">Class representing the dataset used in the Waste Detection System, created following </span>
+<span class="sd">`this tutorial &lt;tutorial_&gt;`_ (available on `medium &lt;tutorial2_&gt;`_).</span>
+
+<span class="sd">Original author: `Johannes Schmidt &lt;author_&gt;`_</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
@@ -140,7 +145,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict: item on the given index</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">input_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
         <span class="n">targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="n">input_path</span><span class="p">]</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">))</span>

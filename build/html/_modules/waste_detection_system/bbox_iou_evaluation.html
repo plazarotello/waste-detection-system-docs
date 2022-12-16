@@ -70,12 +70,33 @@
            <div itemprop="articleBody">
              
   <h1>Source code for waste_detection_system.bbox_iou_evaluation</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _anurirc: https://github.com/AruniRC</span>
+<span class="sd">.. _gist: https://gist.githubusercontent.com/AruniRC/c629c2df0e68e23aff7dcaeef87c72d4/raw/22c6f41fba4fec31d77bfa36d38bb1f7aeabdde6/bbox_iou_evaluation.py</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    The bounding boxes matching based on IoU comes from `this gist &lt;gist_&gt;`_. </span>
+<span class="sd">    This utility is used in the :ref:`Hybrid Deep Learning model &lt;feature_extractor&gt;`.</span>
+
+<span class="sd">    Original author: `AnuriRC &lt;anurirc_&gt;`_</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="bbox_iou"><a class="viewcode-back" href="../../waste_detection_system-utils.html#waste_detection_system.bbox_iou_evaluation.bbox_iou">[docs]</a><span class="k">def</span> <span class="nf">bbox_iou</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxB</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Calculates the Intersection over Union (IoU) metric of the given boxes</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      boxA (Tuple[int, int, int, int]): xyxy VOC formatted box</span>
+<span class="sd">      boxB (Tuple[int, int, int, int]): xyxy VOC formatted box</span>
+
+<span class="sd">  Returns:</span>
+<span class="sd">      float: IoU metric</span>
+<span class="sd">  &quot;&quot;&quot;</span>
   <span class="c1"># https://www.pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/</span>
   <span class="c1"># ^^ corrected.</span>
     
@@ -107,7 +128,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    bbox_gt, bbox_pred : N1x4 and N2x4 np array of bboxes [x1,y1,x2,y2]. </span>
+<span class="sd">    bbox_gt, bbox_pred : N1x4 and N2x4 np array of VOC bboxes [x1,y1,x2,y2]. </span>
 <span class="sd">      The number of bboxes, N1 and N2, need not be the same.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>

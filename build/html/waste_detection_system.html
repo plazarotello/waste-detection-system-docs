@@ -74,8 +74,27 @@
              
   <section id="module-waste_detection_system">
 <span id="waste-detection-system"></span><h1>Waste Detection System<a class="headerlink" href="#module-waste_detection_system" title="Permalink to this heading"></a></h1>
-<p>Waste Detection System</p>
-<p>Module for creating, training and testing models for paperboard and plastic waste detection</p>
+<p>Module for creating, training and testing models for paperboard and plastic
+waste detection. The tools and frameworks used in this implementation are:</p>
+<ul class="simple">
+<li><p>PyTorch</p></li>
+<li><p>torchvision</p></li>
+<li><p>torchmetrics</p></li>
+<li><p>lightning.ai (former PyTorch Lightning)</p></li>
+</ul>
+<p>Thanks to the contributors and community behind this frameworks; you made this
+project posible.</p>
+<div class="admonition note" id="tll">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>About the <code class="docutils literal notranslate"><span class="pre">transfer</span> <span class="pre">learning</span> <span class="pre">level</span></code>:</dt><dd><ul class="simple">
+<li><p>TLL = 0 : train the model from scratch (all layers)</p></li>
+<li><p>TLL = 1 : use transfer learning and train only the model’s classification and regression heads</p></li>
+<li><p>TLL = 2..5 : use fine-tuning and train the model’s heads as well as some more layers</p></li>
+</ul>
+</dd>
+</dl>
+</div>
 </section>
 
 

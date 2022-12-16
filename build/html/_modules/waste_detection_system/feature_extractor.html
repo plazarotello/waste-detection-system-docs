@@ -72,7 +72,18 @@
   <h1>Source code for waste_detection_system.feature_extractor</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. note::</span>
+<span class="sd">    For the Hybrid Deep Learning models, the system requires that the user </span>
+<span class="sd">    previously trained the object detection module and applied the </span>
+<span class="sd">    corresponding weights.</span>
+
+<span class="sd">    The Hybrid Deep Learning model will *not* train the object detection module;</span>
+<span class="sd">    insted, when training the Machine Learning classifier the object detection</span>
+<span class="sd">    module will be put in ``eval()`` mode.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">log_loss</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
@@ -85,7 +96,17 @@
 <span class="kn">from</span> <span class="nn">waste_detection_system.bbox_iou_evaluation</span> <span class="kn">import</span> <span class="n">match_bboxes</span>
 
 <div class="viewcode-block" id="FeatureExtractor"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.FeatureExtractor">[docs]</a><span class="k">class</span> <span class="nc">FeatureExtractor</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Intermediate module that transforms the object detection model into</span>
+<span class="sd">    a feature extractor that returns feature maps and bounding boxes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span> <span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            model (nn.Module): object detection module (see :ref:`here &lt;object_detection&gt;_` </span>
+<span class="sd">                                for the list of allowed models)</span>
+<span class="sd">            layer (str): name of the bounding box regression head</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_name</span> <span class="o">=</span> <span class="n">layer</span>
@@ -95,13 +116,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()])[</span><span class="n">layer</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_features</span><span class="p">())</span>
     
-<div class="viewcode-block" id="FeatureExtractor.save_features"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.FeatureExtractor.save_features">[docs]</a>    <span class="k">def</span> <span class="nf">save_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">save_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Hook that takes the inputs and outputs of a layer and</span>
+<span class="sd">        registers them in the module</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Callable: a forward hook for the given layer</span>
+<span class="sd">        </span>
+<span class="sd">        :meta private:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="nb">input</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">output</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bounding_boxes</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="nb">input</span>
-        <span class="k">return</span> <span class="n">fn</span></div>
+        <span class="k">return</span> <span class="n">fn</span>
     
 <div class="viewcode-block" id="FeatureExtractor.forward"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.FeatureExtractor.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Applies the input tensor to the model and retrieves the</span>
+<span class="sd">        results from the forward hook</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (Tensor): input tensor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[Tensor]]: dictionary with ``bounding_boxes`` and </span>
+<span class="sd">                                    ``features`` keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s1">&#39;bounding_boxes&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_boxes</span><span class="p">,</span>
@@ -111,10 +150,25 @@
 
 
 
-
 <div class="viewcode-block" id="HybridDLModel"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel">[docs]</a><span class="k">class</span> <span class="nc">HybridDLModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hybrid Deep Learning/traditional Machine Learning model that uses the</span>
+<span class="sd">    Deep Learning object detector model to obtain the bounding boxes and</span>
+<span class="sd">    the feature maps associated, and a traditional Machine Learning </span>
+<span class="sd">    classifier algorithm to predict the bounding box class given its </span>
+<span class="sd">    feature map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_extractor</span> <span class="p">:</span> <span class="n">FeatureExtractor</span><span class="p">,</span> 
                 <span class="n">classifier_type</span> <span class="p">:</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature_extractor (FeatureExtractor): feature extractor</span>
+<span class="sd">            classifier_type (AVAILABLE_CLASSIFIERS): type of traditional ML</span>
+<span class="sd">                                                    classifier</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if the classifier type is not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">feature_extractor</span>
@@ -139,9 +193,10 @@
 <span class="sd">            result (List[Dict[str, Tensor]]): the output from the model.</span>
 <span class="sd">                During training, it returns the classifier loss.</span>
 <span class="sd">                During testing, it returns a list of dictionaries (one for each image) that contains</span>
-<span class="sd">                &#39;boxes&#39;, &#39;labels&#39;, &#39;scores&#39;.</span>
+<span class="sd">                ``boxes``, ``labels``, ``scores``.</span>
 
-<span class="sd">        Raises:</span>
+<span class="sd">        Raises: </span>
+<span class="sd">            Exception: if the model is training but doesn&#39;t have targets</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
@@ -165,7 +220,7 @@
                     <span class="s1">&#39;feature_map&#39;</span> <span class="p">:</span> <span class="p">[]</span>
                 <span class="p">}</span>
 
-                <span class="k">for</span> <span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">iou</span><span class="p">,</span> <span class="n">valid</span> <span class="ow">in</span> <span class="n">match_bboxes</span><span class="p">(</span><span class="n">target_boxes</span><span class="p">,</span> <span class="n">pred_boxes</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">valid</span> <span class="ow">in</span> <span class="n">match_bboxes</span><span class="p">(</span><span class="n">target_boxes</span><span class="p">,</span> <span class="n">pred_boxes</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">valid</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="k">continue</span>
                     
@@ -206,6 +261,16 @@
     
 
 <div class="viewcode-block" id="HybridDLModel.validate"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]],</span> <span class="n">y</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Custom validation step to be used in conjunction with the model in ``eval()`` mode</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (List[Dict[str, Tensor]]): results from the ``forward()`` function in ``eval()`` mode</span>
+<span class="sd">            y (List[Dict[str, Tensor]]): targets, as passed to the ``forward()`` function</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Tensor]: dictionary with only one key ``classification_loss`` that holds the</span>
+<span class="sd">                                classification loss</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
             <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>

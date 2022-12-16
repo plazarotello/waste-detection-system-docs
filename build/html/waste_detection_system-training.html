@@ -45,9 +45,6 @@
 <li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Training scripts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-waste_detection_system.trainer">The training script</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.log_packages_neptune"><code class="docutils literal notranslate"><span class="pre">log_packages_neptune()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.save_best_model"><code class="docutils literal notranslate"><span class="pre">save_best_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.split_dataset"><code class="docutils literal notranslate"><span class="pre">split_dataset()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#waste_detection_system.trainer.train_hybrid"><code class="docutils literal notranslate"><span class="pre">train_hybrid()</span></code></a></li>
@@ -114,51 +111,6 @@
 <h1>Training<a class="headerlink" href="#training" title="Permalink to this heading"></a></h1>
 <section id="module-waste_detection_system.trainer">
 <span id="the-training-script"></span><h2>The training script<a class="headerlink" href="#module-waste_detection_system.trainer" title="Permalink to this heading"></a></h2>
-<p>Waste Detection System: Trainer</p>
-<p>Module holding the hyperparameter tuning and training scripts.
-Includes auxiliary functions to log to neptune.ai</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.trainer.log_packages_neptune">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">log_packages_neptune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neptune_logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NeptuneLogger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#log_packages_neptune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.log_packages_neptune" title="Permalink to this definition"></a></dt>
-<dd><p>Flushes the logs of the run</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neptune_logger</strong> (<em>NeptuneLogger</em>) – neptune.ai logger</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.trainer.save_best_model">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">save_best_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#save_best_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.save_best_model" title="Permalink to this definition"></a></dt>
-<dd><p>Copies the best model to the save directory</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>checkpoint_path</strong> (<em>pathlib.Path</em>) – best model path</p></li>
-<li><p><strong>save_directory</strong> (<em>pathlib.Path</em>) – save directory</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waste_detection_system.trainer.split_dataset">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">split_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#split_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.split_dataset" title="Permalink to this definition"></a></dt>
-<dd><p>Splits a dataset in train (85%) and validation (15%)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataset</strong> (<em>DataFrame</em>) – dataset to split</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>train dataset and validation dataset, in that order</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[DataFrame, DataFrame]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.trainer.test">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.test" title="Permalink to this definition"></a></dt>
@@ -261,8 +213,11 @@ batch size</p>
 </section>
 <section id="module-waste_detection_system.waste_detection_module">
 <span id="the-lightning-module"></span><h2>The lightning module<a class="headerlink" href="#module-waste_detection_system.waste_detection_module" title="Permalink to this heading"></a></h2>
-<p>Waste Detection System: lightning module</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">LightningModule</span></code> which holds the logic of the training loop, etc.</p>
+<p>Class representing the training, validation and testing logic used in the Waste
+Detection System, based on <a class="reference external" href="https://github.com/johschmidt42/PyTorch-Object-Detection-Faster-RCNN-Tutorial">this tutorial</a> (available on <a class="reference external" href="https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70">medium</a>).</p>
+<p>Original author: <a class="reference external" href="https://github.com/johschmidt42">Johannes Schmidt</a></p>
+<p>Further expanded to include Non-Maximum Suppresion, support for different metrics,
+optimizers’ configuration and modified validation and test phases.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.waste_detection_module.</span></span><span class="sig-name descname"><span class="pre">WasteDetectionModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FasterRCNN</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SSD</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitor_metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule" title="Permalink to this definition"></a></dt>
@@ -1031,9 +986,9 @@ the model goes back to training mode and gradients are enabled.</p>
 </section>
 <section id="module-waste_detection_system.waste_detection_dataset">
 <span id="the-dataset-logic"></span><h2>The dataset logic<a class="headerlink" href="#module-waste_detection_system.waste_detection_dataset" title="Permalink to this heading"></a></h2>
-<p>Waste Detection System: Dataset</p>
-<p>Class representing the dataset used in the Waste Detection System
-Created following the tutorial on <a class="reference external" href="https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70">https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70</a></p>
+<p>Class representing the dataset used in the Waste Detection System, created following
+<a class="reference external" href="https://github.com/johschmidt42/PyTorch-Object-Detection-Faster-RCNN-Tutorial">this tutorial</a> (available on <a class="reference external" href="https://johschmidt42.medium.com/train-your-own-object-detector-with-faster-rcnn-pytorch-8d3c759cfc70">medium</a>).</p>
+<p>Original author: <a class="reference external" href="https://github.com/johschmidt42">Johannes Schmidt</a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="waste_detection_system.waste_detection_dataset.WasteDetectionDataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.waste_detection_dataset.</span></span><span class="sig-name descname"><span class="pre">WasteDetectionDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_dataset.html#WasteDetectionDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_dataset.WasteDetectionDataset" title="Permalink to this definition"></a></dt>

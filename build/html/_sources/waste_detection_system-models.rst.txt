@@ -1,6 +1,7 @@
 Models
 =========================
 
+.. _object_detection:
 Object detection models
 ---------------------------
 .. automodule:: waste_detection_system.models
@@ -8,6 +9,7 @@ Object detection models
    :undoc-members:
    :show-inheritance:
 
+.. _feature_extractor:
 Hybrid Deep Learning models
 ------------------------------
 .. automodule:: waste_detection_system.feature_extractor
