@@ -45,6 +45,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.hyperparameter_search"><code class="docutils literal notranslate"><span class="pre">hyperparameter_search()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.load_weights_from_checkpoint"><code class="docutils literal notranslate"><span class="pre">load_weights_from_checkpoint()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.save_weights"><code class="docutils literal notranslate"><span class="pre">save_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.main.train_hybrid"><code class="docutils literal notranslate"><span class="pre">train_hybrid()</span></code></a></li>
 </ul>
@@ -159,6 +160,26 @@ Defaults to None</p></li>
 <li><p><strong>weights</strong> (<em>Any</em>) – weights to save</p></li>
 <li><p><strong>save_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – file saving path</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.main.test">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.test" title="Permalink to this definition"></a></dt>
+<dd><p>Tests the given dataset against the model in the checkpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the checkpoint model</p></li>
+<li><p><strong>test_dataset</strong> (<em>pd.DataFrame</em>) – dataset to test</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mAP for the test dataset</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

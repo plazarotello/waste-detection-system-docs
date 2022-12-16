@@ -103,6 +103,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">lightning</span> <span class="kn">import</span> <span class="n">Trainer</span>
 <span class="kn">from</span> <span class="nn">codecarbon</span> <span class="kn">import</span> <span class="n">EmissionsTracker</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -206,8 +207,11 @@
     
 
     <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-    <span class="n">trainer</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">monitor_metric</span> <span class="o">=</span> <span class="n">metric</span><span class="p">,</span> <span class="n">find_lr</span><span class="o">=</span><span class="n">find_lr</span><span class="p">,</span> 
-                <span class="n">find_batch_size</span><span class="o">=</span><span class="n">find_batch_size</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">monitor_metric</span> <span class="o">=</span> <span class="n">metric</span><span class="p">,</span> <span class="n">find_lr</span><span class="o">=</span><span class="n">find_lr</span><span class="p">,</span> 
+                    <span class="n">find_batch_size</span><span class="o">=</span><span class="n">find_batch_size</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
     <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
 
@@ -253,9 +257,12 @@
         <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-    <span class="n">best_model_path</span><span class="p">,</span> <span class="n">model_trainer</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span> 
-        <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">configuration</span><span class="p">,</span> <span class="n">limit_validation</span><span class="o">=</span><span class="n">limit_validation</span><span class="p">,</span>
-        <span class="n">neptune_project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">NEPTUNE_PROJECTS</span><span class="p">[</span><span class="n">selected_model</span><span class="p">][</span><span class="n">resortit_zw</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span> 
+            <span class="n">config</span><span class="o">=</span><span class="n">configuration</span><span class="p">,</span> <span class="n">limit_validation</span><span class="o">=</span><span class="n">limit_validation</span><span class="p">,</span>
+            <span class="n">neptune_project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">NEPTUNE_PROJECTS</span><span class="p">[</span><span class="n">selected_model</span><span class="p">][</span><span class="n">resortit_zw</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
     <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
 
@@ -293,7 +300,10 @@
         <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_hybrid</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_hybrid</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
     <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -337,6 +347,22 @@
         <span class="n">module</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">test_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Tests the given dataset against the model in the checkpoint</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint model</span>
+<span class="sd">        test_dataset (pd.DataFrame): dataset to test</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Any: mAP for the test dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span><span class="p">)</span></div>
+    
 </pre></div>
 
            </div>
