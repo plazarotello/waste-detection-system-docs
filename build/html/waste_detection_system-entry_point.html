@@ -166,12 +166,15 @@ Defaults to None</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.main.test">
-<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.test" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resortit_zw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/waste_detection_system/main.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.test" title="Permalink to this definition"></a></dt>
 <dd><p>Tests the given dataset against the model in the checkpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the checkpoint model</p></li>
+<li><p><strong>selected_model</strong> (<em>AVAILABLE_MODELS</em>) – model in which to test</p></li>
+<li><p><strong>resortit_zw</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">0</span></code> if ResortIT dataset, <code class="docutils literal notranslate"><span class="pre">1</span></code> if ZeroWaste
+Used for the logger’s project name</p></li>
 <li><p><strong>test_dataset</strong> (<em>pd.DataFrame</em>) – dataset to test</p></li>
 </ul>
 </dd>
@@ -196,7 +199,7 @@ Defaults to None</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – name of the task</p></li>
 <li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – path to the configuration JSON file</p></li>
 <li><p><strong>resortit_zw</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">0</span></code> if ResortIT dataset, <code class="docutils literal notranslate"><span class="pre">1</span></code> if ZeroWaste
-Used for neptune.ai logger</p></li>
+Used for the logger’s project name</p></li>
 <li><p><strong>metric</strong> (<em>str</em>) – metric to optimize</p></li>
 <li><p><strong>selected_model</strong> (<em>AVAILABLE_MODELS</em>) – model to train</p></li>
 <li><p><strong>num_classes</strong> (<em>int</em>) – number of classes in the dataset</p></li>

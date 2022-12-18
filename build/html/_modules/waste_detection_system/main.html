@@ -103,7 +103,6 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
-<span class="kn">from</span> <span class="nn">lightning</span> <span class="kn">import</span> <span class="n">Trainer</span>
 <span class="kn">from</span> <span class="nn">codecarbon</span> <span class="kn">import</span> <span class="n">EmissionsTracker</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -200,7 +199,7 @@
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">base_model</span>
 
-    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">GPU</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;hypersearch-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
         <span class="n">gpu_ids</span><span class="o">=</span><span class="n">gpu_ids</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> 
         <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">configuration</span><span class="p">[</span><span class="s1">&#39;results_dir&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">-emissions.csv&#39;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
@@ -230,7 +229,7 @@
 <span class="sd">        name (str): name of the task</span>
 <span class="sd">        config (Union[Path, str]): path to the configuration JSON file</span>
 <span class="sd">        resortit_zw (int): ``0`` if ResortIT dataset, ``1`` if ZeroWaste</span>
-<span class="sd">                            Used for neptune.ai logger</span>
+<span class="sd">                            Used for the logger&#39;s project name</span>
 <span class="sd">        metric (str): metric to optimize</span>
 <span class="sd">        selected_model (AVAILABLE_MODELS): model to train</span>
 <span class="sd">        num_classes (int): number of classes in the dataset</span>
@@ -251,16 +250,23 @@
             <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
     
-    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">GPU</span> <span class="k">else</span> <span class="kc">None</span>
     
     <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">gpu_ids</span><span class="o">=</span><span class="n">gpu_ids</span><span class="p">,</span> 
         <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span> 
-            <span class="n">config</span><span class="o">=</span><span class="n">configuration</span><span class="p">,</span> <span class="n">limit_validation</span><span class="o">=</span><span class="n">limit_validation</span><span class="p">,</span>
-            <span class="n">neptune_project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">NEPTUNE_PROJECTS</span><span class="p">[</span><span class="n">selected_model</span><span class="p">][</span><span class="n">resortit_zw</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> 
+            <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span> 
+            <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span> 
+            <span class="n">config</span><span class="o">=</span><span class="n">configuration</span><span class="p">,</span> 
+            <span class="n">limit_validation</span><span class="o">=</span><span class="n">limit_validation</span><span class="p">,</span> 
+            <span class="n">name</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">get_experiment_name</span><span class="p">(</span><span class="n">tll</span><span class="p">),</span>
+            <span class="n">project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">get_project_name</span><span class="p">(</span><span class="n">selected_model</span><span class="p">,</span> <span class="n">resortit_zw</span><span class="p">),</span> 
+            <span class="n">metric</span><span class="o">=</span><span class="n">metric</span>
+        <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">pass</span>
     <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
@@ -294,7 +300,7 @@
             <span class="n">chosen_classifier</span><span class="o">=</span><span class="n">selected_classifier</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     
-    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">gpu_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">base</span><span class="o">.</span><span class="n">GPU</span><span class="p">]</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">USE_GPU</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">GPU</span> <span class="k">else</span> <span class="kc">None</span>
     
     <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">gpu_ids</span><span class="o">=</span><span class="n">gpu_ids</span><span class="p">,</span> 
         <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">tracking_mode</span><span class="o">=</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
@@ -336,7 +342,7 @@
 <span class="sd">        Dict[str, Any]: weights of the model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">fake_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({})</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="p">(</span>
@@ -350,18 +356,27 @@
 
 
 
-<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">test_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">selected_model</span> <span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="p">,</span> 
+        <span class="n">resortit_zw</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">test_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Tests the given dataset against the model in the checkpoint</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint model</span>
+<span class="sd">        selected_model (AVAILABLE_MODELS): model in which to test</span>
+<span class="sd">        resortit_zw (int): ``0`` if ResortIT dataset, ``1`` if ZeroWaste</span>
+<span class="sd">                            Used for the logger&#39;s project name</span>
 <span class="sd">        test_dataset (pd.DataFrame): dataset to test</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Any: mAP for the test dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span><span class="p">)</span></div>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
+                        <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span> 
+                        <span class="n">project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">get_project_name</span><span class="p">(</span><span class="n">selected_model</span><span class="p">,</span> <span class="n">resortit_zw</span><span class="p">),</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">get_experiment_name</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span>
+                    <span class="p">)</span></div>
     
 </pre></div>
 

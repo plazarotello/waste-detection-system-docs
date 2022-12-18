@@ -157,7 +157,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;train_batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_batch_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s1">&#39;val_batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_batch_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save_hyperparameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_hyperparameters</span><span class="p">(</span><span class="n">ignore</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;train_dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;val_dataset&#39;</span><span class="p">])</span>
     
 
 
@@ -235,7 +235,9 @@
         <span class="n">computed_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_mAP&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">computed_map</span></div>
 
 
 <div class="viewcode-block" id="WasteDetectionModule.apply_thresholds"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.apply_thresholds">[docs]</a>    <span class="k">def</span> <span class="nf">apply_thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]):</span>
@@ -324,7 +326,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span> <span class="n">base</span><span class="o">.</span><span class="n">CATS_PAPEL</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">CATS_PLASTICO</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">WasteDetectionDataset</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
-    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_double</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     
     <span class="k">return</span> <span class="n">dataloader</span></div>

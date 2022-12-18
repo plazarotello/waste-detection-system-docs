@@ -55,6 +55,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.shared_data.SEED"><code class="docutils literal notranslate"><span class="pre">SEED</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.shared_data.USE_CPU"><code class="docutils literal notranslate"><span class="pre">USE_CPU</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.shared_data.USE_GPU"><code class="docutils literal notranslate"><span class="pre">USE_GPU</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.shared_data.get_experiment_name"><code class="docutils literal notranslate"><span class="pre">get_experiment_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waste_detection_system.shared_data.get_project_name"><code class="docutils literal notranslate"><span class="pre">get_project_name()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -103,12 +105,11 @@ as such:</p>
 │   ├── TACO
 │   ├── Trashbox-metal
 │   ├── WasteClassification
-│   ├── zero-waste
+│   └── zero-waste
 │       └── zerowaste-f
 ├── results: holds the results
 │   └── final_dataset.csv
-├── *waste_detection_system*: the source code
-└── neptune.secret: plain text file with the API key
+└── *waste_detection_system*: the source code
 </pre></div>
 </div>
 <dl class="py attribute">
@@ -210,6 +211,16 @@ as such:</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.get_experiment_name">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">get_experiment_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tll</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/waste_detection_system/shared_data.html#get_experiment_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.shared_data.get_experiment_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.get_project_name">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">get_project_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resortit_zw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/waste_detection_system/shared_data.html#get_project_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.shared_data.get_project_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 
