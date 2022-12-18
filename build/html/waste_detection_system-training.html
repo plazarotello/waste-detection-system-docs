@@ -56,16 +56,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.apply_thresholds"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.apply_thresholds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.configure_optimizers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.forward"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_test_epoch_end()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_test_start()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_train_epoch_end()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_train_epoch_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_train_epoch_start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_validation_epoch_end()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.on_validation_start()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.test_epoch_end()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.test_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.test_step()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.train_dataloader"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.train_dataloader()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.training_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.training_step()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.val_dataloader"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.val_dataloader()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.validation_epoch_end()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step"><code class="docutils literal notranslate"><span class="pre">WasteDetectionModule.validation_step()</span></code></a></li>
 </ul>
 </li>
@@ -434,6 +434,12 @@ override the <code class="xref py py-meth docutils literal notranslate"><span cl
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_epoch_end">
+<span class="sig-name descname"><span class="pre">on_test_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.on_test_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_epoch_end" title="Permalink to this definition"></a></dt>
+<dd><p>Called in the test loop at the very end of the epoch.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start">
 <span class="sig-name descname"><span class="pre">on_test_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.on_test_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start" title="Permalink to this definition"></a></dt>
 <dd><p>Called at the beginning of testing.</p>
@@ -457,59 +463,15 @@ override the <code class="xref py py-meth docutils literal notranslate"><span cl
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start">
-<span class="sig-name descname"><span class="pre">on_validation_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.on_validation_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start" title="Permalink to this definition"></a></dt>
-<dd><p>Called at the beginning of validation.</p>
+<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_epoch_end">
+<span class="sig-name descname"><span class="pre">on_validation_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.on_validation_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_epoch_end" title="Permalink to this definition"></a></dt>
+<dd><p>Called in the validation loop at the very end of the epoch.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end">
-<span class="sig-name descname"><span class="pre">test_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.test_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end" title="Permalink to this definition"></a></dt>
-<dd><p>Called at the end of a test epoch with the output of all test steps.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># the pseudocode for these calls</span>
-<span class="n">test_outs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">test_batch</span> <span class="ow">in</span> <span class="n">test_data</span><span class="p">:</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">test_step</span><span class="p">(</span><span class="n">test_batch</span><span class="p">)</span>
-    <span class="n">test_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<span class="n">test_epoch_end</span><span class="p">(</span><span class="n">test_outs</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>outputs</strong> – List of outputs you defined in <code class="xref py py-meth docutils literal notranslate"><span class="pre">test_step_end()</span></code>, or if there
-are multiple dataloaders, a list containing a list of outputs for each dataloader</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you didn’t define a <a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.test_step" title="waste_detection_system.waste_detection_module.WasteDetectionModule.test_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">test_step()</span></code></a>, this won’t be called.</p>
-</div>
-<p class="rubric">Examples</p>
-<p>With a single dataloader:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-    <span class="c1"># do something with the outputs of all test batches</span>
-    <span class="n">all_test_preds</span> <span class="o">=</span> <span class="n">test_step_outputs</span><span class="o">.</span><span class="n">predictions</span>
-
-    <span class="n">some_result</span> <span class="o">=</span> <span class="n">calc_all_results</span><span class="p">(</span><span class="n">all_test_preds</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">some_result</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>With multiple dataloaders, <cite>outputs</cite> will be a list of lists. The outer list contains
-one entry per dataloader, while the inner list contains the individual outputs of
-each test step for that dataloader.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-    <span class="n">final_value</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">dataloader_outputs</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">test_step_out</span> <span class="ow">in</span> <span class="n">dataloader_outputs</span><span class="p">:</span>
-            <span class="c1"># do something</span>
-            <span class="n">final_value</span> <span class="o">+=</span> <span class="n">test_step_out</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;final_metric&quot;</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
-</pre></div>
-</div>
+<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start">
+<span class="sig-name descname"><span class="pre">on_validation_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.on_validation_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start" title="Permalink to this definition"></a></dt>
+<dd><p>Called at the beginning of validation.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -802,50 +764,6 @@ implement this method.</p>
 <p class="admonition-title">Note</p>
 <p>In the case where you return multiple validation dataloaders, the <a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step" title="waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validation_step()</span></code></a>
 will have an argument <code class="docutils literal notranslate"><span class="pre">dataloader_idx</span></code> which matches the order here.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end">
-<span class="sig-name descname"><span class="pre">validation_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/waste_detection_module.html#WasteDetectionModule.validation_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end" title="Permalink to this definition"></a></dt>
-<dd><p>Called at the end of the validation epoch with the outputs of all validation steps.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># the pseudocode for these calls</span>
-<span class="n">val_outs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">val_batch</span> <span class="ow">in</span> <span class="n">val_data</span><span class="p">:</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">validation_step</span><span class="p">(</span><span class="n">val_batch</span><span class="p">)</span>
-    <span class="n">val_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<span class="n">validation_epoch_end</span><span class="p">(</span><span class="n">val_outs</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>outputs</strong> – List of outputs you defined in <a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step" title="waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validation_step()</span></code></a>, or if there
-are multiple dataloaders, a list containing a list of outputs for each dataloader.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you didn’t define a <a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step" title="waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validation_step()</span></code></a>, this won’t be called.</p>
-</div>
-<p class="rubric">Examples</p>
-<p>With a single dataloader:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val_step_outputs</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">val_step_outputs</span><span class="p">:</span>
-        <span class="o">...</span>
-</pre></div>
-</div>
-<p>With multiple dataloaders, <cite>outputs</cite> will be a list of lists. The outer list contains
-one entry per dataloader, while the inner list contains the individual outputs of
-each validation step for that dataloader.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">dataloader_output_result</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
-        <span class="n">dataloader_outs</span> <span class="o">=</span> <span class="n">dataloader_output_result</span><span class="o">.</span><span class="n">dataloader_i_outputs</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;final_metric&quot;</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
-</pre></div>
 </div>
 </dd></dl>
 

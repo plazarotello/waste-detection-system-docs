@@ -189,9 +189,8 @@
 
 
 <div class="viewcode-block" id="WasteDetectionModule.on_validation_start"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_validation_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_validation_start</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_validation_start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="WasteDetectionModule.validation_step"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_step">[docs]</a>    <span class="k">def</span> <span class="nf">validation_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="c1"># Batch</span>
@@ -205,19 +204,20 @@
 
         <span class="k">return</span> <span class="n">nms_predictions</span></div>
 
-<div class="viewcode-block" id="WasteDetectionModule.validation_epoch_end"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.validation_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
+<div class="viewcode-block" id="WasteDetectionModule.on_validation_epoch_end"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_validation_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
         <span class="n">computed_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Validation_mAP&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Validation_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Validation_metrics&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_validation_epoch_end</span><span class="p">()</span></div>
 
 
 
 
 <div class="viewcode-block" id="WasteDetectionModule.on_test_start"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_test_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_test_start</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span> <span class="o">=</span> <span class="n">MeanAveragePrecision</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_test_start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="WasteDetectionModule.test_step"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_step">[docs]</a>    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="c1"># Batch</span>
@@ -231,7 +231,7 @@
 
         <span class="k">return</span> <span class="n">preds</span></div>
 
-<div class="viewcode-block" id="WasteDetectionModule.test_epoch_end"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.test_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
+<div class="viewcode-block" id="WasteDetectionModule.on_test_epoch_end"><a class="viewcode-back" href="../../waste_detection_system-training.html#waste_detection_system.waste_detection_module.WasteDetectionModule.on_test_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
         <span class="n">computed_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_metric</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Test_mAP&quot;</span><span class="p">,</span> <span class="n">computed_map</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
