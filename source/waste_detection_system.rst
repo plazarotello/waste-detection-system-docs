@@ -1,6 +1,9 @@
 Waste Detection System
 ----------------------
 
+.. toctree::
+   :maxdepth: 2
+
 .. automodule:: waste_detection_system
    :members:
    :undoc-members:

@@ -13,6 +13,9 @@ General Utilities
 Transformations
 -----------------------------------
 
+.. toctree::
+   :maxdepth: 2
+   
 .. automodule:: waste_detection_system.transformations
    :members:
    :undoc-members:

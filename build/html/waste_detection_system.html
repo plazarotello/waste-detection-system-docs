@@ -40,7 +40,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Waste Detection System</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Waste Detection System</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="waste_detection_system-entry_point.html">Entry point of the module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="waste_detection_system-models.html">Available models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="waste_detection_system-training.html">Training scripts</a></li>
@@ -72,9 +74,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-waste_detection_system">
-<span id="waste-detection-system"></span><h1>Waste Detection System<a class="headerlink" href="#module-waste_detection_system" title="Permalink to this heading"></a></h1>
-<p>Module for creating, training and testing models for paperboard and plastic
+  <section id="waste-detection-system">
+<h1>Waste Detection System<a class="headerlink" href="#waste-detection-system" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-waste_detection_system"></span><p>Module for creating, training and testing models for paperboard and plastic
 waste detection. The tools and frameworks used in this implementation are:</p>
 <ul class="simple">
 <li><p>PyTorch</p></li>
@@ -82,6 +86,75 @@ waste detection. The tools and frameworks used in this implementation are:</p>
 <li><p>torchmetrics</p></li>
 <li><p>lightning.ai (former PyTorch Lightning)</p></li>
 </ul>
+<p>The entry point to the module is the <a class="reference internal" href="waste_detection_system-entry_point.html#main"><span class="std std-ref">main script</span></a>. Below there are
+some examples of how to use the module:</p>
+<div class="literal-block-wrapper docutils container" id="loading-and-saving-weights">
+<div class="code-block-caption"><span class="caption-text">Loading and saving weights</span><a class="headerlink" href="#loading-and-saving-weights" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">path_to_a_model</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">MODELS_DIR</span> <span class="o">/</span> <span class="s1">&#39;project-name&#39;</span> <span class="o">/</span> <span class="s1">&#39;model.ckpt&#39;</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">weights</span> <span class="o">=</span> <span class="n">main</span><span class="o">.</span><span class="n">load_weights_from_checkpoint</span><span class="p">(</span><span class="n">path_to_a_model</span><span class="p">,</span>    <span class="c1"># path or str</span>
+<span class="linenos">4</span>                            <span class="n">main</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span><span class="p">,</span>   <span class="c1"># type of model</span>
+<span class="linenos">5</span>                            <span class="mi">2</span><span class="p">)</span>                                  <span class="c1"># number of classes</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="n">main</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">MODELS_DIR</span> <span class="o">/</span> <span class="s1">&#39;project-name&#39;</span> <span class="o">/</span> <span class="s1">&#39;model_weights.pt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="hyperparameter-search">
+<div class="code-block-caption"><span class="caption-text">Hyperparameter search</span><a class="headerlink" href="#hyperparameter-search" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">main</span><span class="o">.</span><span class="n">hyperparameter_search</span><span class="p">(</span>
+<span class="linenos"> 2</span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;project-name&#39;</span><span class="p">,</span>                                <span class="c1"># name of the project</span>
+<span class="linenos"> 3</span>    <span class="n">config</span><span class="o">=</span><span class="s1">&#39;path_to_hyper_options.json&#39;</span><span class="p">,</span>                <span class="c1"># path to hyper-options.json</span>
+<span class="linenos"> 4</span>    <span class="n">dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span>                              <span class="c1"># training dataset</span>
+<span class="linenos"> 5</span>    <span class="n">selected_model</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span><span class="p">,</span>    <span class="c1"># type of model</span>
+<span class="linenos"> 6</span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                                      <span class="c1"># number of classes</span>
+<span class="linenos"> 7</span>    <span class="n">tll</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                                              <span class="c1"># Transfer Learning Level</span>
+<span class="linenos"> 8</span>    <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>                                    <span class="c1"># the weights we&#39;ve loaded before</span>
+<span class="linenos"> 9</span>    <span class="n">find_batch_size</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                              <span class="c1"># turn on to find the maximum batch size allowed</span>
+<span class="linenos">10</span>    <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;training_loss&#39;</span>                              <span class="c1"># &#39;training_loss&#39;, &#39;Validation_mAP&#39;...</span>
+<span class="linenos">11</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="training">
+<div class="code-block-caption"><span class="caption-text">Training</span><a class="headerlink" href="#training" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">main</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+<span class="linenos"> 2</span>    <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span>                        <span class="c1"># training dataset</span>
+<span class="linenos"> 3</span>    <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span>                            <span class="c1"># validation dataset</span>
+<span class="linenos"> 4</span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;project-name&#39;</span><span class="p">,</span>                                <span class="c1"># project name</span>
+<span class="linenos"> 5</span>    <span class="n">config</span><span class="o">=</span><span class="s1">&#39;path_to_config.json&#39;</span><span class="p">,</span>                       <span class="c1"># path to the configuration JSON</span>
+<span class="linenos"> 6</span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                                      <span class="c1"># number of classes</span>
+<span class="linenos"> 7</span>    <span class="n">tll</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                                              <span class="c1"># Transfer Learning Level</span>
+<span class="linenos"> 8</span>    <span class="n">resortit_zw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                                      <span class="c1"># 0 for ResortIT, 1 for ZeroWaste (for naming purposes)</span>
+<span class="linenos"> 9</span>    <span class="n">selected_model</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span><span class="p">,</span>    <span class="c1"># type of model</span>
+<span class="linenos">10</span>    <span class="n">limit_validation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                             <span class="c1"># turn on if you want to validate only a subset of samples</span>
+<span class="linenos">11</span>    <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>                                    <span class="c1"># the seights we&#39;ve loaded before (if you are not starting training from zero)</span>
+<span class="linenos">12</span>    <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;training_loss&#39;</span>                              <span class="c1"># metric to optimize</span>
+<span class="linenos">13</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">main</span><span class="o">.</span><span class="n">train_hybrid</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span>                        <span class="c1"># training dataset</span>
+<span class="linenos">17</span>    <span class="n">val_dataset</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span>                            <span class="c1"># validation dataset</span>
+<span class="linenos">18</span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;project-name&#39;</span><span class="p">,</span>                                <span class="c1"># project name</span>
+<span class="linenos">19</span>    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                                      <span class="c1"># number of classes</span>
+<span class="linenos">20</span>    <span class="n">selected_model</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span><span class="p">,</span>           <span class="c1"># type of model</span>
+<span class="linenos">21</span>    <span class="n">selected_classifier</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">AVAILABLE_CLASSIFIERS</span><span class="o">.</span><span class="n">SVC</span><span class="p">,</span> <span class="c1"># type of classifier</span>
+<span class="linenos">22</span>    <span class="n">weights</span><span class="o">=</span><span class="n">weights</span>                                     <span class="c1"># weights we&#39;ve loaded before (the base model won&#39;t be training)</span>
+<span class="linenos">23</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="testing">
+<div class="code-block-caption"><span class="caption-text">Testing</span><a class="headerlink" href="#testing" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">main</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
+<span class="linenos">2</span>    <span class="n">checkpoint_path</span><span class="o">=</span><span class="s1">&#39;path-to-best-checkpoint.ckpt&#39;</span><span class="p">,</span>     <span class="c1"># path to the checkpoint CKPT</span>
+<span class="linenos">3</span>    <span class="n">selected_model</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span><span class="p">,</span>    <span class="c1"># type of model</span>
+<span class="linenos">4</span>    <span class="n">resortit_zw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                                      <span class="c1"># 0 for ResortIT, 1 for ZeroWaste (for naming purposes)</span>
+<span class="linenos">5</span>    <span class="n">test_dataset</span><span class="o">=</span><span class="n">test_dataset</span>                           <span class="c1"># test dataset</span>
+<span class="linenos">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <p>Thanks to the contributors and community behind this frameworks; you made this
 project posible.</p>
 <div class="admonition note" id="tll">

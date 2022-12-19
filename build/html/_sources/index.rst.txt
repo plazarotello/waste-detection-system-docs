@@ -8,6 +8,7 @@ Waste Detection System Documentation
 
 .. toctree::
    :maxdepth: 2
+   :titlesonly:
 
    Waste Detection System <waste_detection_system>
    Entry point of the module <waste_detection_system-entry_point>

@@ -1,6 +1,9 @@
 Training
 =============================
 
+.. toctree::
+   :maxdepth: 2
+
 The training script
 ---------------------------------
 
