@@ -83,17 +83,21 @@
 <span class="sd">    module will be put in ``eval()`` mode.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">log_loss</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
 <span class="kn">from</span> <span class="nn">waste_detection_system.shared_data</span> <span class="kn">import</span> <span class="n">AVAILABLE_CLASSIFIERS</span>
 <span class="kn">from</span> <span class="nn">waste_detection_system.bbox_iou_evaluation</span> <span class="kn">import</span> <span class="n">match_bboxes</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system.waste_detection_dataset</span> <span class="kn">import</span> <span class="n">WasteDetectionDataset</span>
 
 <div class="viewcode-block" id="FeatureExtractor"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.FeatureExtractor">[docs]</a><span class="k">class</span> <span class="nc">FeatureExtractor</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -173,21 +177,23 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">feature_extractor</span>
         <span class="k">if</span> <span class="n">classifier_type</span> <span class="o">==</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="o">.</span><span class="n">SVM</span><span class="p">:</span>
-            <span class="n">classifier_module</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">&#39;svc&#39;</span><span class="p">,</span> <span class="n">LinearSVC</span><span class="p">())])</span>
         <span class="k">elif</span> <span class="n">classifier_type</span> <span class="o">==</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="o">.</span><span class="n">KNN</span><span class="p">:</span>
-            <span class="n">classifier_module</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">&#39;knnc&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">())])</span>
         <span class="k">else</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Classifier type not supported&#39;</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">classifier_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">classifier_module</span><span class="p">])</span>
     
-<div class="viewcode-block" id="HybridDLModel.forward"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">targets</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="HybridDLModel.forward"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_loader</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">[</span><span class="n">WasteDetectionDataset</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">val_loader</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">[</span><span class="n">WasteDetectionDataset</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            images (list[Tensor]): images to be processed</span>
-<span class="sd">            targets (list[Dict[str, Tensor]]): ground-truth boxes present in the image (optional)</span>
+<span class="sd">            train_loader (Union[DataLoader[WasteDetectionDataset], None]): dataloader for</span>
+<span class="sd">                training. It won&#39;t be used if the model is not in training mode. Defaults to ``None``</span>
+<span class="sd">            val_loader (Union[DataLoader[WasteDetectionDataset], None]): dataloader for</span>
+<span class="sd">                validating. It won&#39;t be used if the model is in training mode. Defaultos to ``None``</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            result (List[Dict[str, Tensor]]): the output from the model.</span>
@@ -196,22 +202,26 @@
 <span class="sd">                ``boxes``, ``labels``, ``scores``.</span>
 
 <span class="sd">        Raises: </span>
-<span class="sd">            Exception: if the model is training but doesn&#39;t have targets</span>
+<span class="sd">            Exception: if the model is training but train_loader is None or the model is not training</span>
+<span class="sd">                        but val_loader is None.</span>
+<span class="sd">                        The function will also raise an exception if the feature extractor can&#39;t make</span>
+<span class="sd">                        any valid predictions.</span>
+<span class="sd">            NotFittedError: if the model is in eval() mode but hasn&#39;t been fitted beforehand.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">and</span> <span class="n">train_loader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
             <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting features...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
                 <span class="n">feature_extraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
                 
-                <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-                <span class="n">feature_map</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                <span class="n">feature_map</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
-                <span class="n">target_boxes</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-                <span class="n">target_labels</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">target_boxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">target</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                <span class="n">target_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">target</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
                 <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s1">&#39;ground_truth_boxes&#39;</span> <span class="p">:</span> <span class="p">[],</span>
@@ -220,7 +230,13 @@
                     <span class="s1">&#39;feature_map&#39;</span> <span class="p">:</span> <span class="p">[]</span>
                 <span class="p">}</span>
 
-                <span class="k">for</span> <span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">valid</span> <span class="ow">in</span> <span class="n">match_bboxes</span><span class="p">(</span><span class="n">target_boxes</span><span class="p">,</span> <span class="n">pred_boxes</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">pred_boxes</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">target_boxes</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">match_bboxes</span><span class="p">(</span><span class="n">target_boxes</span><span class="p">,</span> <span class="n">pred_boxes</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                        <span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">result</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="k">continue</span>
                     <span class="k">if</span> <span class="n">valid</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="k">continue</span>
                     
@@ -231,23 +247,38 @@
                 
                 <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
             
-            <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;feature_map&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;ground_truth_labels&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Done!&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">features</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Couldn</span><span class="se">\&#39;</span><span class="s1">t find any predictions.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Cant</span><span class="se">\&#39;</span><span class="s1">t find any predictions&#39;</span><span class="p">)</span>
+
+            <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;feature_map&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span> <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;feature_map&#39;</span><span class="p">]]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;ground_truth_labels&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span> <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;ground_truth_labels&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">X</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">y</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Couldn</span><span class="se">\&#39;</span><span class="s1">t find any predictions.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Cant</span><span class="se">\&#39;</span><span class="s1">t find any predictions&#39;</span><span class="p">)</span>
+            
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Classifying...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="n">y_hat_prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Done&#39;</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;classification_loss&#39;</span> <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_hat_prob</span><span class="p">))}</span>
         
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">and</span> <span class="n">val_loader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
             <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">val_loader</span><span class="p">:</span>
                 <span class="n">feature_extraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
                 
-                <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">]</span>
-                <span class="n">feature_map</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                <span class="n">feature_map</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
+                <span class="k">if</span> <span class="n">pred_boxes</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">)</span>
+                
                 <span class="n">y_hat_prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">feature_map</span><span class="p">)</span>
                 <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">feature_map</span><span class="p">)</span>
 
@@ -257,7 +288,11 @@
                     <span class="s1">&#39;labels&#39;</span> <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
                 <span class="p">})</span>
 
-            <span class="k">return</span> <span class="n">results</span></div>
+            <span class="k">return</span> <span class="n">results</span>
+        
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incorrect forward call, training=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="si">}</span><span class="s1">, &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;train_loader=</span><span class="si">{</span><span class="n">train_loader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="si">}</span><span class="s1"> and &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;val_loader=</span><span class="si">{</span><span class="n">val_loader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
     
 
 <div class="viewcode-block" id="HybridDLModel.validate"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.feature_extractor.HybridDLModel.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]],</span> <span class="n">y</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
