@@ -108,6 +108,29 @@ a traditional Machine Learning classifier of the following:</p>
 detector and only then, with the best weights saved, use it to create the feature
 extractor of the hybrid model.</p>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="waste_detection_system.models.MLPBackbone">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">MLPBackbone</span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#MLPBackbone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.MLPBackbone" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Lightweighted backbone for use as a feature extractor in an object detector such as
+SSD and Faster R-CNN.</p>
+<p>Consists on a Convolutional layer, a batch normalization, a ReLU and a max pool layer</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waste_detection_system.models.MLPBackbone.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#MLPBackbone.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.MLPBackbone.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.get_base_model">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_base_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_learning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">FasterRCNN</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FCOS</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SSD</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RetinaNet</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_base_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_base_model" title="Permalink to this definition"></a></dt>
@@ -135,7 +158,24 @@ extractor of the hybrid model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.get_hybrid_model">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.models.</span></span><span class="sig-name descname"><span class="pre">get_hybrid_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_classifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Classifiers</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waste_detection_system.feature_extractor.HybridDLModel" title="waste_detection_system.feature_extractor.HybridDLModel"><span class="pre">HybridDLModel</span></a></span></span><a class="reference internal" href="_modules/waste_detection_system/models.html#get_hybrid_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.models.get_hybrid_model" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Constructs a hybrid DL+traditional ML model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_classes</strong> (<em>int</em>) – number of classes</p></li>
+<li><p><strong>chosen_model</strong> (<em>AVAILABLE_MODELS</em>) – base object detection model</p></li>
+<li><p><strong>weights</strong> (<em>Any</em>) – weights of the base detection model</p></li>
+<li><p><strong>chosen_classifier</strong> (<em>AVAILABLE_CLASSIFIERS</em>) – traditional ML classifier head</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constructed model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#waste_detection_system.feature_extractor.HybridDLModel" title="waste_detection_system.feature_extractor.HybridDLModel">HybridDLModel</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.models.load_partial_weights">

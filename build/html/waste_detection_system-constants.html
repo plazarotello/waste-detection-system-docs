@@ -111,7 +111,18 @@ as such:</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="waste_detection_system.shared_data.AVAILABLE_MODELS">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">AVAILABLE_MODELS</span></span><a class="headerlink" href="#waste_detection_system.shared_data.AVAILABLE_MODELS" title="Permalink to this definition"></a></dt>
-<dd><p>enum: available models: <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">FCOS</span></code>, <code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code>, <code class="docutils literal notranslate"><span class="pre">SSD</span></code></p>
+<dd><p>enum: available models: <code class="docutils literal notranslate"><span class="pre">FasterRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">FCOS</span></code>, <code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code>, <code class="docutils literal notranslate"><span class="pre">SSD</span></code>, <code class="docutils literal notranslate"><span class="pre">MLP_FRCNN</span></code>, <code class="docutils literal notranslate"><span class="pre">MLP_SSD</span></code></p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.CATEGORY2NUMBER">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">CATEGORY2NUMBER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'PAPEL':</span> <span class="pre">1,</span> <span class="pre">'PLASTICO':</span> <span class="pre">2}</span></em><a class="headerlink" href="#waste_detection_system.shared_data.CATEGORY2NUMBER" title="Permalink to this definition"></a></dt>
+<dd><p>transforms a given category to a numeric label</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py data">
@@ -154,6 +165,17 @@ as such:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waste_detection_system.shared_data.NUMBER2CATEGORY">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.shared_data.</span></span><span class="sig-name descname"><span class="pre">NUMBER2CATEGORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{1:</span> <span class="pre">'PAPEL',</span> <span class="pre">2:</span> <span class="pre">'PLASTICO'}</span></em><a class="headerlink" href="#waste_detection_system.shared_data.NUMBER2CATEGORY" title="Permalink to this definition"></a></dt>
+<dd><p>transforms a numeric label to a string category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict</p>
 </dd>
 </dl>
 </dd></dl>

@@ -105,12 +105,16 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fasterrcnn_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">FasterRCNN</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">fcos_resnet50_fpn</span><span class="p">,</span> <span class="n">FCOS_ResNet50_FPN_Weights</span><span class="p">,</span> <span class="n">FCOS</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">retinanet_resnet50_fpn_v2</span><span class="p">,</span> <span class="n">RetinaNet_ResNet50_FPN_V2_Weights</span><span class="p">,</span> <span class="n">RetinaNet</span>
 <span class="kn">from</span> <span class="nn">torchvision.models.detection</span> <span class="kn">import</span> <span class="n">ssd300_vgg16</span><span class="p">,</span> <span class="n">SSD300_VGG16_Weights</span>
-<span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection.ssd</span> <span class="kn">import</span> <span class="n">SSD</span><span class="p">,</span> <span class="n">SSDHead</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.detection.anchor_utils</span> <span class="kn">import</span> <span class="n">AnchorGenerator</span><span class="p">,</span> <span class="n">DefaultBoxGenerator</span>
+<span class="kn">from</span> <span class="nn">torchvision.ops.poolers</span> <span class="kn">import</span> <span class="n">MultiScaleRoIAlign</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">nn</span>
 
 <span class="kn">from</span> <span class="nn">torchinfo</span> <span class="kn">import</span> <span class="n">summary</span>
 
@@ -156,13 +160,49 @@
 <span class="sd">    Args:</span>
 <span class="sd">        model (Union[FasterRCNN, FCOS, SSD, RetinaNet]): model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">,</span> <span class="s2">&quot;input_size&quot;</span><span class="p">,</span> <span class="s2">&quot;output_size&quot;</span><span class="p">],</span> <span class="n">input_size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">],</span> <span class="n">batch_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> 
+        <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">,</span> <span class="s2">&quot;input_size&quot;</span><span class="p">,</span> <span class="s2">&quot;output_size&quot;</span><span class="p">],</span> 
+        <span class="n">input_size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">],</span> <span class="n">batch_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
 
+
+
+<div class="viewcode-block" id="MLPBackbone"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.MLPBackbone">[docs]</a><span class="k">class</span> <span class="nc">MLPBackbone</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lightweighted backbone for use as a feature extractor in an object detector such as</span>
+<span class="sd">    SSD and Faster R-CNN.</span>
+
+<span class="sd">    Consists on a Convolutional layer, a batch normalization, a ReLU and a max pool layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inplanes</span> <span class="o">=</span> <span class="mi">256</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplanes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backbone</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">([</span>
+            <span class="p">(</span><span class="s1">&#39;conv1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;bn1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inplanes</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;relu1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s1">&#39;maxpool1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="p">]))</span>
+    
+<div class="viewcode-block" id="MLPBackbone.forward"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.MLPBackbone.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backbone</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
 
 
 
 <div class="viewcode-block" id="get_hybrid_model"><a class="viewcode-back" href="../../waste_detection_system-models.html#waste_detection_system.models.get_hybrid_model">[docs]</a><span class="k">def</span> <span class="nf">get_hybrid_model</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chosen_model</span> <span class="p">:</span> <span class="n">AVAILABLE_MODELS</span><span class="p">,</span> <span class="n">weights</span> <span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">chosen_classifier</span> <span class="p">:</span> <span class="n">AVAILABLE_CLASSIFIERS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HybridDLModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a hybrid DL+traditional ML model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        chosen_model (AVAILABLE_MODELS): base object detection model</span>
+<span class="sd">        weights (Any): weights of the base detection model</span>
+<span class="sd">        chosen_classifier (AVAILABLE_CLASSIFIERS): traditional ML classifier head</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HybridDLModel: constructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_base_model</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">chosen_model</span><span class="o">=</span><span class="n">chosen_model</span><span class="p">,</span>
                             <span class="n">transfer_learning_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
@@ -195,6 +235,8 @@
                                                                 <span class="n">transfer_learning_level</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span> <span class="p">:</span> <span class="k">return</span> <span class="n">get_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> 
                                                                 <span class="n">transfer_learning_level</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">MLP_FRCNN</span><span class="p">:</span> <span class="k">return</span> <span class="n">get_mlp_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">chosen_model</span> <span class="o">==</span> <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">MLP_SSD</span><span class="p">:</span> <span class="k">return</span> <span class="n">get_mlp_ssd</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Model not supported&#39;</span><span class="p">)</span></div>
 
 
@@ -211,6 +253,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        FeatureExtractor: wrapper that returns a dictionary of &#39;bounding_boxes&#39; and &#39;features&#39;,</span>
 <span class="sd">        both of them being lists of tensors</span>
+<span class="sd">    :meta private:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SSD</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FeatureExtractor</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;head.regression_head&#39;</span><span class="p">)</span>
@@ -489,6 +532,101 @@
     <span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
     <span class="k">return</span> <span class="n">apply_tll_to_ssd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">transfer_learning_level</span><span class="p">)</span> <span class="c1"># type: ignore</span>
+
+
+<span class="k">def</span> <span class="nf">get_mlp_fasterrcnn</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FasterRCNN</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``MLP_FRCNN`` model, a.k.a. a Faster R-CNN detector with a custom</span>
+<span class="sd">    lightweight backbone.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        FasterRCNN: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FasterRCNN</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">MLPBackbone</span><span class="p">()</span>
+
+    <span class="c1"># Generate anchors using the RPN. Here, we are using 5x3 anchors.</span>
+    <span class="c1"># Meaning, anchors with 5 different sizes and 3 different aspect </span>
+    <span class="c1"># ratios.</span>
+    <span class="n">anchor_sizes</span> <span class="o">=</span> <span class="p">((</span><span class="mi">32</span><span class="p">,),</span> <span class="p">(</span><span class="mi">64</span><span class="p">,),</span> <span class="p">(</span><span class="mi">128</span><span class="p">,),</span> <span class="p">(</span><span class="mi">256</span><span class="p">,),</span> <span class="p">(</span><span class="mi">512</span><span class="p">,))</span>
+    <span class="n">aspect_ratios</span> <span class="o">=</span> <span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">anchor_sizes</span><span class="p">)</span>
+    <span class="n">anchor_generator</span> <span class="o">=</span> <span class="n">AnchorGenerator</span><span class="p">(</span>
+        <span class="n">sizes</span><span class="o">=</span><span class="n">anchor_sizes</span><span class="p">,</span>
+        <span class="n">aspect_ratios</span><span class="o">=</span><span class="n">aspect_ratios</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Feature maps to perform RoI cropping.</span>
+    <span class="c1"># If backbone returns a Tensor, `featmap_names` is expected to</span>
+    <span class="c1"># be [0]. We can choose which feature maps to use.</span>
+    <span class="n">roi_pooler</span> <span class="o">=</span> <span class="n">MultiScaleRoIAlign</span><span class="p">(</span>
+        <span class="n">featmap_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+        <span class="n">output_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+        <span class="n">sampling_ratio</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">FasterRCNN</span><span class="p">(</span>
+        <span class="n">backbone</span><span class="o">=</span><span class="n">backbone</span><span class="p">,</span> 
+        <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">rpn_anchor_generator</span><span class="o">=</span><span class="n">anchor_generator</span><span class="p">,</span> 
+        <span class="n">box_roi_pool</span><span class="o">=</span><span class="n">roi_pooler</span><span class="p">,</span>
+        <span class="n">rpn_fg_iou_thresh</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">rpn_bg_iou_thresh</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">box_fg_iou_thresh</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">box_bg_iou_thresh</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">FasterRCNN_ResNet50_FPN_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">return</span> <span class="n">model</span> <span class="c1"># type: ignore</span>
+
+
+<span class="k">def</span> <span class="nf">get_mlp_ssd</span><span class="p">(</span><span class="n">num_classes</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSD</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a ``MLP_SSD`` model, a.k.a. a SSD detector with a custom</span>
+<span class="sd">    lightweight backbone.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_classes (int): number of classes</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        SSD: constructed model</span>
+<span class="sd">        </span>
+<span class="sd">    :meta private:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SSD</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: ignore</span>
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">MLPBackbone</span><span class="p">()</span>
+
+    <span class="n">anchor_generator</span> <span class="o">=</span> <span class="n">DefaultBoxGenerator</span><span class="p">(</span>
+        <span class="p">[[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+        <span class="n">scales</span><span class="o">=</span><span class="p">[</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.51</span><span class="p">,</span> <span class="mf">0.69</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">],</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">num_anchors</span> <span class="o">=</span> <span class="n">anchor_generator</span><span class="o">.</span><span class="n">num_anchors_per_location</span><span class="p">()</span>
+
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Rescale the input in a way compatible to the backbone</span>
+        <span class="s2">&quot;image_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.48235</span><span class="p">,</span> <span class="mf">0.45882</span><span class="p">,</span> <span class="mf">0.40784</span><span class="p">],</span>
+        <span class="s2">&quot;image_std&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">],</span>  <span class="c1"># undo the 0-1 scaling of toTensor</span>
+    <span class="p">}</span>
+    
+    <span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">defaults</span><span class="p">}</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">SSDHead</span><span class="p">([</span><span class="n">backbone</span><span class="o">.</span><span class="n">out_channels</span><span class="p">],</span> <span class="n">num_anchors</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SSD</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">anchor_generator</span><span class="p">,</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">head</span><span class="p">,</span>
+                <span class="n">iou_thresh</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_partial_weights</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">SSD300_VGG16_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">model_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span><span class="o">+</span><span class="mi">1</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">return</span> <span class="n">model</span> <span class="c1"># type: ignore</span>
 </pre></div>
 
            </div>

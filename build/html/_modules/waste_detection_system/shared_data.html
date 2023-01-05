@@ -122,8 +122,8 @@
 <span class="sd">&quot;&quot;&quot;int: pixels of height for resizing images</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">AVAILABLE_MODELS</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Models&#39;</span><span class="p">,</span> <span class="s1">&#39;FASTERRCNN FCOS RETINANET SSD&#39;</span><span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;enum: available models: ``FasterRCNN``, ``FCOS``, ``RetinaNet``, ``SSD``</span>
+<span class="n">AVAILABLE_MODELS</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Models&#39;</span><span class="p">,</span> <span class="s1">&#39;FASTERRCNN FCOS RETINANET SSD MLP_FRCNN MLP_SSD&#39;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;enum: available models: ``FasterRCNN``, ``FCOS``, ``RetinaNet``, ``SSD``, ``MLP_FRCNN``, ``MLP_SSD``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">AVAILABLE_CLASSIFIERS</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Classifiers&#39;</span><span class="p">,</span> <span class="s1">&#39;SVM KNN&#39;</span><span class="p">)</span>
@@ -142,7 +142,9 @@
         <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">FASTERRCNN</span> <span class="p">:</span> <span class="s1">&#39;faster-r-cnn&#39;</span><span class="p">,</span>
         <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">SSD</span> <span class="p">:</span> <span class="s1">&#39;ssd&#39;</span><span class="p">,</span>
         <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">FCOS</span> <span class="p">:</span> <span class="s1">&#39;fcos&#39;</span><span class="p">,</span>
-        <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">RETINANET</span> <span class="p">:</span> <span class="s1">&#39;retinanet&#39;</span>
+        <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">RETINANET</span> <span class="p">:</span> <span class="s1">&#39;retinanet&#39;</span><span class="p">,</span>
+        <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">MLP_FRCNN</span> <span class="p">:</span> <span class="s1">&#39;mlp-faster-r-cnn&#39;</span><span class="p">,</span>
+        <span class="n">AVAILABLE_MODELS</span><span class="o">.</span><span class="n">MLP_SSD</span> <span class="p">:</span> <span class="s1">&#39;mlp-ssd&#39;</span>
     <span class="p">}</span>
     <span class="n">dataset_to_project</span> <span class="o">=</span> <span class="p">{</span>
         <span class="mi">0</span> <span class="p">:</span> <span class="s1">&#39;resortit&#39;</span><span class="p">,</span>
@@ -274,6 +276,12 @@
 <span class="n">CATS_VIDRIO</span> <span class="o">=</span> <span class="s1">&#39;VIDRIO&#39;</span>
 <span class="n">CATS_OTROS</span> <span class="o">=</span> <span class="s1">&#39;OTROS&#39;</span>
 
+<span class="n">CATEGORY2NUMBER</span> <span class="o">=</span> <span class="p">{</span> <span class="n">CATS_PAPEL</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CATS_PLASTICO</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Dict: transforms a given category to a numeric label</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">NUMBER2CATEGORY</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span> <span class="p">:</span> <span class="n">CATS_PAPEL</span><span class="p">,</span> <span class="mi">2</span> <span class="p">:</span> <span class="n">CATS_PLASTICO</span><span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Dict: transforms a numeric label to a string category</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 
 <span class="n">COLOR_CATS</span> <span class="o">=</span> <span class="p">{</span>

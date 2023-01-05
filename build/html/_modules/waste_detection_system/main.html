@@ -89,6 +89,11 @@
 <span class="sd">    the Deep Learning neural network based object detection model and</span>
 <span class="sd">    the traditional Machine Learning classifier, respectively.</span>
 
+<span class="sd">Testing scripts</span>
+<span class="sd">    The ``test()`` and ``benchmark()`` functions are used to test the</span>
+<span class="sd">    Deep Learning neural network based object detection model, giving </span>
+<span class="sd">    the test mAP and the average milliseconds per processed image</span>
+
 <span class="sd">Loading/saving weights</span>
 <span class="sd">    The weights loading is managed by ``load_weights_from_checkpoint()``,</span>
 <span class="sd">    which accepts both the .pt model weights and .ckpt checkpoint from</span>
@@ -100,6 +105,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
@@ -112,6 +118,7 @@
 <span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">shared_data</span> <span class="k">as</span> <span class="n">base</span>
 <span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">trainer</span>
+<span class="kn">from</span> <span class="nn">waste_detection_system</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">waste_detection_system.waste_detection_module</span> <span class="kn">import</span> <span class="n">WasteDetectionModule</span>
 <span class="kn">from</span> <span class="nn">waste_detection_system.feature_extractor</span> <span class="kn">import</span> <span class="n">HybridDLModel</span>
 
@@ -377,7 +384,12 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Any: mAP for the test dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span>
+        <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> 
+        <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">train_dataset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({}),</span>
+        <span class="n">val_dataset</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
                         <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span> 
                         <span class="n">project</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">get_project_name</span><span class="p">(</span><span class="n">selected_model</span><span class="p">,</span> <span class="n">resortit_zw</span><span class="p">),</span>
@@ -385,6 +397,71 @@
                         <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span>
                     <span class="p">)</span></div>
     
+
+<div class="viewcode-block" id="benchmark"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.benchmark">[docs]</a><span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">test_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Predicts the given dataset against the model in the checkpoint, calculating the </span>
+<span class="sd">    process time spent in each prediction. Prints the predicted vs real annotations of a</span>
+<span class="sd">    random image of the dataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        checkpoint_path (Union[str, Path]): path to the checkpoint model</span>
+<span class="sd">        test_dataset (pd.DataFrame): dataset to test</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: averaged prediction time in milliseconds</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">WasteDetectionModule</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span>
+        <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span> 
+        <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">train_dataset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({}),</span>
+        <span class="n">val_dataset</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+    <span class="p">(</span><span class="n">average_ms</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">benchmark_prediction</span><span class="p">(</span>
+                                    <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+                                    <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span>
+                                <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Tiempo medio empleado en detectar residuos en una imagen: &#39;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">average_ms</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> ms (</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">average_ms</span><span class="o">/</span><span class="mf">60.0</span><span class="p">)</span><span class="si">}</span><span class="s1"> FPS)&#39;</span><span class="p">)</span>
+    
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">NUMBER2CATEGORY</span>
+    <span class="n">random_index</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">image_predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">random_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">selected_image</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="n">random_index</span><span class="p">]]</span>
+
+    <span class="n">predictions_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;bbox-x&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;bbox-y&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;bbox-w&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;bbox-h&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;dataset&#39;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">box</span><span class="p">,</span> <span class="n">label_no</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">image_predictions</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> 
+                            <span class="n">image_predictions</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()):</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">label_no</span><span class="p">]</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">pascal2coco</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;bbox-x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;bbox-y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;bbox-w&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;bbox-h&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">predictions_dict</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">predictions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">predictions_dict</span><span class="p">)</span>
+    <span class="n">real_annotations</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="p">[</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+    <span class="n">prediction_img</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_image_with_annotations</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># type: ignore</span>
+                                                        <span class="n">annotations</span><span class="o">=</span><span class="n">predictions_df</span><span class="p">,</span>
+                                                        <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">real_img</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_image_with_annotations</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">selected_image</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># type: ignore</span>
+                                                <span class="n">annotations</span><span class="o">=</span><span class="n">real_annotations</span><span class="p">,</span>
+                                                <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">show</span><span class="p">([</span><span class="n">prediction_img</span><span class="p">,</span> <span class="n">real_img</span><span class="p">],</span> <span class="c1"># type: ignore</span>
+                <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> 
+                <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Predicciones versus Anotaciones reales&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">average_ms</span></div>
 </pre></div>
 
            </div>
