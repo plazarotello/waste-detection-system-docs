@@ -81,6 +81,26 @@
 <section id="module-waste_detection_system.trainer">
 <span id="the-training-script"></span><h2>The training script<a class="headerlink" href="#module-waste_detection_system.trainer" title="Permalink to this heading"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.trainer.benchmark_optimized">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">benchmark_optimized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">onnx_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#benchmark_optimized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.benchmark_optimized" title="Permalink to this definition"></a></dt>
+<dd><p>Quantizes the inference time of the optimized (ONNX) model on the test dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>onnx_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the ONNX model</p></li>
+<li><p><strong>test_dataset</strong> (<em>DataFrame</em>) – test dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>averaged prediction time in milliseconds per image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.trainer.benchmark_prediction">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">benchmark_prediction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#waste_detection_system.waste_detection_module.WasteDetectionModule" title="waste_detection_system.waste_detection_module.WasteDetectionModule"><span class="pre">WasteDetectionModule</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#benchmark_prediction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.benchmark_prediction" title="Permalink to this definition"></a></dt>
 <dd><p>Benchmarks the prediction time for the dataset in the given trainer</p>
@@ -92,10 +112,30 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>averaged prediction time in milliseconds and actual predictions</p>
+<dd class="field-even"><p>averaged prediction time in milliseconds per image and actual predictions</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tuple[float, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waste_detection_system.trainer.optimize_model">
+<span class="sig-prename descclassname"><span class="pre">waste_detection_system.trainer.</span></span><span class="sig-name descname"><span class="pre">optimize_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/waste_detection_system/trainer.html#optimize_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.trainer.optimize_model" title="Permalink to this definition"></a></dt>
+<dd><p>Translates the pytorch model to ONNX format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>checkpoint_path</strong> (<em>pathlib.Path</em>) – path to the pytorch checkpoint model (.ckpt)</p></li>
+<li><p><strong>sample_input</strong> (<em>DataFrame</em>) – sample input (train or validation dataset)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to the ONNX model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pathlib.Path</p>
 </dd>
 </dl>
 </dd></dl>

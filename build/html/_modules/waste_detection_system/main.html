@@ -421,7 +421,7 @@
                                     <span class="n">dataset</span><span class="o">=</span><span class="n">test_dataset</span>
                                 <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Tiempo medio empleado en detectar residuos en una imagen: &#39;</span><span class="p">,</span>
-          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">average_ms</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> ms (</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">average_ms</span><span class="o">/</span><span class="mf">60.0</span><span class="p">)</span><span class="si">}</span><span class="s1"> FPS)&#39;</span><span class="p">)</span>
+          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">average_ms</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> ms (</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="mf">1000.0</span><span class="o">/</span><span class="n">average_ms</span><span class="p">)</span><span class="si">}</span><span class="s1"> FPS)&#39;</span><span class="p">)</span>
     
     <span class="n">mapping</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">NUMBER2CATEGORY</span>
     <span class="n">random_index</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
@@ -462,6 +462,33 @@
                 <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> 
                 <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Predicciones versus Anotaciones reales&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">average_ms</span></div>
+
+
+<div class="viewcode-block" id="benchmark_optimized"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.benchmark_optimized">[docs]</a><span class="k">def</span> <span class="nf">benchmark_optimized</span><span class="p">(</span><span class="n">onnx_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">test_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Predicts the given dataset against the ONNX model in the file path, calculating the </span>
+<span class="sd">    process time spent in each prediction.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        onnx_path (Union[str, Path]): path to the ONNX model</span>
+<span class="sd">        test_dataset (pd.DataFrame): test dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">average_ms</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">benchmark_optimized</span><span class="p">(</span><span class="n">onnx_path</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Tiempo medio empleado en detectar residuos en una imagen (optimizado): &#39;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">average_ms</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> ms (</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="mf">1000.0</span><span class="o">/</span><span class="n">average_ms</span><span class="p">)</span><span class="si">}</span><span class="s1"> FPS)&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="optimize_model_for_inference"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.optimize_model_for_inference">[docs]</a><span class="k">def</span> <span class="nf">optimize_model_for_inference</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> 
+                                <span class="n">sample_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;TODO</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        checkpoint_path (Union[str, Path]): _description_</span>
+<span class="sd">        sample_dataset (pd.DataFrame): _description_</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimize_model</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">),</span> <span class="n">sample_dataset</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
