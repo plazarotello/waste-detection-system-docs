@@ -190,19 +190,19 @@ Defaults to None</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="waste_detection_system.main.optimize_model_for_inference">
 <span class="sig-prename descclassname"><span class="pre">waste_detection_system.main.</span></span><span class="sig-name descname"><span class="pre">optimize_model_for_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waste_detection_system/main.html#optimize_model_for_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waste_detection_system.main.optimize_model_for_inference" title="Permalink to this definition"></a></dt>
-<dd><p>TODO</p>
+<dd><p>Transforms the model checkpoint to ONNX format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – _description_</p></li>
-<li><p><strong>sample_dataset</strong> (<em>pd.DataFrame</em>) – _description_</p></li>
+<li><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – path to the model checkpoint (.ckpt)</p></li>
+<li><p><strong>sample_dataset</strong> (<em>pd.DataFrame</em>) – sample input (train or validation dataset)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>_description_</p>
+<dd class="field-even"><p>path to the ONNX model</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_type_</p>
+<dd class="field-odd"><p>pathlib.Path</p>
 </dd>
 </dl>
 </dd></dl>

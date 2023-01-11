@@ -479,14 +479,14 @@
 
 <div class="viewcode-block" id="optimize_model_for_inference"><a class="viewcode-back" href="../../waste_detection_system-entry_point.html#waste_detection_system.main.optimize_model_for_inference">[docs]</a><span class="k">def</span> <span class="nf">optimize_model_for_inference</span><span class="p">(</span><span class="n">checkpoint_path</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> 
                                 <span class="n">sample_dataset</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;TODO</span>
+    <span class="sd">&quot;&quot;&quot;Transforms the model checkpoint to ONNX format</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        checkpoint_path (Union[str, Path]): _description_</span>
-<span class="sd">        sample_dataset (pd.DataFrame): _description_</span>
+<span class="sd">        checkpoint_path (Union[str, Path]): path to the model checkpoint (.ckpt)</span>
+<span class="sd">        sample_dataset (pd.DataFrame): sample input (train or validation dataset)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        _type_: _description_</span>
+<span class="sd">        pathlib.Path: path to the ONNX model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimize_model</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">),</span> <span class="n">sample_dataset</span><span class="p">)</span></div>
 </pre></div>
